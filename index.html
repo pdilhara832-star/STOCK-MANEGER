@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title> 
+<title>Stock Manager - Hard & Power Supply Suite</title>
 <style>
 :root{font-family:'Inter',system-ui,sans-serif;color:#0f172a;background:#060911;font-synthesis:none}
 *{box-sizing:border-box}body{margin:0;position:relative;min-height:100vh}
@@ -24,6 +24,7 @@ main{max-width:1380px;margin:auto;padding:24px;padding-bottom:100px}.notice{back
 <datalist id="productsList"></datalist>
 
 <header><h1>Stock Manager Pro</h1><p>Hard Drives &amp; Power Supplies Inventory Suite</p></header>
+<main>
 
 <nav class="tabs">
 <button class="active" data-tab="dashboard">📊 Inventory Summary</button>
@@ -61,9 +62,9 @@ main{max-width:1380px;margin:auto;padding:24px;padding-bottom:100px}.notice{back
   <th>Item Code</th>
   <th>Product / Model</th>
   <th>Category</th>
-  <th class="num">Working </th>
-  <th class="num">Warranty </th>
-  <th class="num">Scrap </th>
+  <th class="num">Working (Bal)</th>
+  <th class="num">Warranty (Bal)</th>
+  <th class="num">Scrap (Bal)</th>
   <th class="num">Total In</th>
   <th class="num">Total Sold</th>
   <th class="num">Net Balance</th>
@@ -213,7 +214,7 @@ main{max-width:1380px;margin:auto;padding:24px;padding-bottom:100px}.notice{back
 
 <script>
 "use strict";
-const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxQOZHhHE_Z1_sqeZkRsXLpuctVCdw1DWNOYOFSqxn6V2a4PwWBb5XNN0wyc9eBD-xYkQ/exec"; 
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbygPIRaNR4n9ldEEXGPfvh2ZYo508E82_tfIbu83HRiDorZFsU-MQwACwQm0hzjhnvLqg/exec"; 
 const STORAGE_KEY = "stock_manager_hard_power_v4";
 
 let state = { products: [], records: [], nextId: 1, nextRecordId: 1 };
