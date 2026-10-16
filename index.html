@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Stock Manager - Pro Dashboard</title>
+<title>Stock Manager - Hard & Power Supply Suite</title>
 <style>
 :root{font-family:'Inter',system-ui,sans-serif;color:#0f172a;background:#060911;font-synthesis:none}
 *{box-sizing:border-box}body{margin:0;position:relative;min-height:100vh}
@@ -13,7 +13,7 @@ main{max-width:1380px;margin:auto;padding:24px;padding-bottom:100px}.notice{back
 .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:24px}.stat{background:rgba(15,23,42,0.75);padding:18px 20px;border-radius:14px;border:1px solid rgba(255,255,255,0.06);box-shadow:0 8px 30px rgba(0,0,0,0.25);backdrop-filter:blur(10px)}.stat small{color:#94a3b8;display:block;margin-bottom:6px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px}.stat strong{font-size:26px;color:#f8fafc;font-weight:800}
 .tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px}.tabs button{border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:11px 16px;background:rgba(15,23,42,0.65);color:#cbd5e1;font-weight:700;font-size:13px;cursor:pointer;backdrop-filter:blur(8px);transition:all 0.25s ease}.tabs button:hover{background:rgba(30,58,138,0.5);color:#fff;border-color:rgba(59,130,246,0.4)}.tabs button.active{background:linear-gradient(135deg,#2563eb,#1d4ed8);color:white;border-color:#3b82f6;box-shadow:0 4px 18px rgba(37,99,235,0.4)}
 .panel{background:rgba(15,23,42,0.82);border:1px solid rgba(255,255,255,0.07);border-radius:16px;padding:24px;margin-bottom:22px;box-shadow:0 10px 35px rgba(0,0,0,0.3);backdrop-filter:blur(12px)}.panel h2{font-size:17px;margin:0 0 18px;color:#60a5fa;border-bottom:1px solid rgba(255,255,255,0.06);padding-bottom:12px;font-weight:700;letter-spacing:.2px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px}.field{display:flex;flex-direction:column;gap:8px}.field label{font-size:12px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.6px}.field input,.field select{width:100%;border:1px solid rgba(255,255,255,0.12);border-radius:10px;padding:12px 14px;font-size:14px;background:rgba(30,41,59,0.6);color:#f8fafc;transition:all 0.2s}.field input:focus,.field select:focus{outline:none;border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,0.25)}
-.btn{border:0;border-radius:10px;padding:12px 20px;font-weight:700;font-size:13px;cursor:pointer;background:linear-gradient(135deg,#2563eb,#1d4ed8);color:white;box-shadow:0 4px 15px rgba(37,99,235,0.35);transition:all 0.2s}.btn:hover{filter:brightness(1.1);transform:translateY(-1px)}.btn.danger{background:linear-gradient(135deg,#dc2626,#b91c1c);box-shadow:0 4px 15px rgba(220,38,38,0.35)}.btn.success{background:linear-gradient(135deg,#059669,#047857);box-shadow:0 4px 15px rgba(5,150,105,0.35)}.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:20px}.table-wrap{overflow:auto}table{width:100%;border-collapse:collapse;min-width:850px}th,td{text-align:left;padding:14px 14px;border-bottom:1px solid rgba(255,255,255,0.05);font-size:13px;color:#e2e8f0}th{background:rgba(30,41,59,0.7);color:#94a3b8;font-size:11px;text-transform:uppercase;letter-spacing:.7px;font-weight:700}tr:last-child td{border-bottom:0}tr:hover td{background:rgba(255,255,255,0.015)}.num{text-align:right;font-variant-numeric:tabular-nums}.total-row{background:rgba(30,41,59,0.5);font-weight:bold;color:#fff}.badge{display:inline-block;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:700}.badge.working{background:rgba(5,150,105,0.2);color:#34d399;border:1px solid rgba(5,150,105,0.3)}.badge.warranty{background:rgba(217,119,6,0.2);color:#fbbf24;border:1px solid rgba(217,119,6,0.3)}.badge.scrap{background:rgba(220,38,38,0.2);color:#f87171;border:1px solid rgba(220,38,38,0.3)}.hidden{display:none!important}.empty{text-align:center;padding:32px;color:#64748b;font-style:italic}
+.btn{border:0;border-radius:10px;padding:12px 20px;font-weight:700;font-size:13px;cursor:pointer;background:linear-gradient(135deg,#2563eb,#1d4ed8);color:white;box-shadow:0 4px 15px rgba(37,99,235,0.35);transition:all 0.2s}.btn:hover{filter:brightness(1.1);transform:translateY(-1px)}.btn.danger{background:linear-gradient(135deg,#dc2626,#b91c1c);box-shadow:0 4px 15px rgba(220,38,38,0.35)}.btn.success{background:linear-gradient(135deg,#059669,#047857);box-shadow:0 4px 15px rgba(5,150,105,0.35)}.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:20px}.table-wrap{overflow:auto}table{width:100%;border-collapse:collapse;min-width:850px}th,td{text-align:left;padding:14px 14px;border-bottom:1px solid rgba(255,255,255,0.05);font-size:13px;color:#e2e8f0}th{background:rgba(30,41,59,0.7);color:#94a3b8;font-size:11px;text-transform:uppercase;letter-spacing:.7px;font-weight:700}tr:last-child td{border-bottom:0}tr:hover td{background:rgba(255,255,255,0.015)}.num{text-align:right;font-variant-numeric:tabular-nums}.total-row{background:rgba(30,41,59,0.5);font-weight:bold;color:#fff}.badge{display:inline-block;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:700}.badge.working{background:rgba(5,150,105,0.2);color:#34d399;border:1px solid rgba(5,150,105,0.3)}.badge.warranty{background:rgba(217,119,6,0.2);color:#fbbf24;border:1px solid rgba(217,119,6,0.3)}.badge.scrap{background:rgba(220,38,38,0.2);color:#f87171;border:1px solid rgba(220,38,38,0.3)}.badge.cat{background:rgba(59,130,246,0.2);color:#93c5fd;border:1px solid rgba(59,130,246,0.3)}.hidden{display:none!important}.empty{text-align:center;padding:32px;color:#64748b;font-style:italic}
 @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 .spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid #fff; border-top-color: transparent; border-radius: 50%; animation: spin 0.8s linear infinite; vertical-align: middle; margin-right: 6px; }
 </style>
@@ -23,9 +23,9 @@ main{max-width:1380px;margin:auto;padding:24px;padding-bottom:100px}.notice{back
 <video autoplay muted loop id="bgVideo"><source src="itachi.mp4" type="video/mp4"></video>
 <datalist id="productsList"></datalist>
 
-<header><h1>Stock Manager Pro Dashboard</h1><p>Working, Warranty &amp; Scrap Advanced Inventory Suite</p></header>
+<header><h1>Stock Manager Pro</h1><p>Hard Drives &amp; Power Supplies Inventory Suite</p></header>
 <main>
-<div class="notice">✨ <strong>System Ready:</strong> Multi-Device Cloud Sync Enabled.</div>
+<div class="notice">✨ <strong>System Ready:</strong> Hard Drives &amp; Power Supplies Categories Enabled with Google Sheets Cloud Sync.</div>
 <div class="stats">
 <div class="stat"><small>Total Products</small><strong id="statProducts">0</strong></div>
 <div class="stat"><small>Total Units in Stock</small><strong id="statStock">0</strong></div>
@@ -36,7 +36,6 @@ main{max-width:1380px;margin:auto;padding:24px;padding-bottom:100px}.notice{back
 <button class="active" data-tab="dashboard">📊 Inventory Summary</button>
 <button data-tab="stockInLogTab">📥 Stock In Log</button>
 <button data-tab="salesLogTab">🛍️ Sales Log</button>
-<button data-tab="monthlyTab">📅 Monthly Closing</button>
 <button data-tab="receive">➕ Stock In (Working)</button>
 <button data-tab="warrantyTab">🟡 Warranty In</button>
 <button data-tab="scrapTab">🔴 Scrap In</button>
@@ -48,7 +47,10 @@ main{max-width:1380px;margin:auto;padding:24px;padding-bottom:100px}.notice{back
 
 <section id="dashboard" class="tab">
 <div class="panel" style="margin-bottom:20px">
-  <div class="grid"><div class="field"><label>Search Inventory</label><input id="searchStock" placeholder="Type model name..."></div></div>
+  <div class="grid">
+    <div class="field"><label>Search Inventory</label><input id="searchStock" placeholder="Type model name..."></div>
+    <div class="field"><label>Filter Category</label><select id="filterCategory"><option value="">All Categories</option><option value="Hard Drive">Hard Drive</option><option value="Power Supply">Power Supply</option></select></div>
+  </div>
   <div class="actions" style="margin-top:15px">
     <button class="btn success" onclick="exportSelectedExcel()">Download Selected Excel (CSV)</button>
     <button class="btn" onclick="printSelectedPdf()">Print / Save Selected PDF</button>
@@ -63,6 +65,7 @@ main{max-width:1380px;margin:auto;padding:24px;padding-bottom:100px}.notice{back
   <th style="width:40px;"><input type="checkbox" id="selectAll" onclick="toggleSelectAll(this)"></th>
   <th>Item Code</th>
   <th>Product / Model</th>
+  <th>Category</th>
   <th class="num">Working (Bal)</th>
   <th class="num">Warranty (Bal)</th>
   <th class="num">Scrap (Bal)</th>
@@ -80,25 +83,14 @@ main{max-width:1380px;margin:auto;padding:24px;padding-bottom:100px}.notice{back
 <section id="stockInLogTab" class="tab hidden">
 <div class="panel">
 <h2>📥 Stock In Log</h2>
-<div class="table-wrap"><table><thead><tr><th>Date</th><th>Supplier / Source</th><th>Item Code</th><th>Product / Model</th><th>Category</th><th>Korean Seal Date</th><th>Sri Lankan Seal Date</th><th class="num">Qty Received</th><th>Notes / Ref</th></tr></thead><tbody id="stockInLogRows"></tbody></table></div>
+<div class="table-wrap"><table><thead><tr><th>Date</th><th>Supplier / Source</th><th>Item Code</th><th>Product / Model</th><th>Category</th><th>Condition</th><th>Korean Seal Date</th><th>Sri Lankan Seal Date</th><th class="num">Qty Received</th><th>Notes / Ref</th></tr></thead><tbody id="stockInLogRows"></tbody></table></div>
 </div>
 </section>
 
 <section id="salesLogTab" class="tab hidden">
 <div class="panel">
 <h2>🛍️ Customer Sales Log</h2>
-<div class="table-wrap"><table><thead><tr><th>Date</th><th>Customer Name</th><th>Item Code</th><th>Product / Model</th><th>Category</th><th class="num">Qty Sold</th><th>Notes / Invoice</th></tr></thead><tbody id="salesLogRows"></tbody></table></div>
-</div>
-</section>
-
-<section id="monthlyTab" class="tab hidden">
-<div class="panel">
-<h2>📅 Monthly Closing Stock Report</h2>
-<div class="grid"><div class="field"><label>Select Month</label><input id="closingMonthInput" type="month"></div></div>
-</div>
-<div class="panel">
-<h2>Closing Stock as of Month End</h2>
-<div class="table-wrap"><table><thead><tr><th>Item Code</th><th>Product / Model</th><th class="num">Working (End)</th><th class="num">Warranty (End)</th><th class="num">Scrap (End)</th><th class="num">Total Closing Balance</th></tr></thead><tbody id="monthlyRows"></tbody></table></div>
+<div class="table-wrap"><table><thead><tr><th>Date</th><th>Customer Name</th><th>Item Code</th><th>Product / Model</th><th>Category</th><th>Deducted From</th><th class="num">Qty Sold</th><th>Notes / Invoice</th></tr></thead><tbody id="salesLogRows"></tbody></table></div>
 </div>
 </section>
 
@@ -161,19 +153,22 @@ main{max-width:1380px;margin:auto;padding:24px;padding-bottom:100px}.notice{back
 <section id="products" class="tab hidden">
 <div class="panel">
 <h2>Add New Product</h2>
-<div class="grid"><div class="field"><label>Product / Model Name</label><input id="newName" placeholder="e.g. POWER 500W"></div></div>
+<div class="grid">
+  <div class="field"><label>Product / Model Name</label><input id="newName" placeholder="e.g. WD 1TB HDD / 500W PSU"></div>
+  <div class="field"><label>Product Category</label><select id="newCategory"><option value="Hard Drive">Hard Drive</option><option value="Power Supply">Power Supply</option></select></div>
+</div>
 <div class="actions"><button class="btn" id="addProduct">Add Product</button></div>
 </div>
 <div class="panel">
 <h2>Product List</h2>
-<div class="table-wrap"><table><thead><tr><th>Code</th><th>Product Name</th><th>Action</th></tr></thead><tbody id="productRows"></tbody></table></div>
+<div class="table-wrap"><table><thead><tr><th>Code</th><th>Product Name</th><th>Category</th><th>Action</th></tr></thead><tbody id="productRows"></tbody></table></div>
 </div>
 </section>
 
 <section id="history" class="tab hidden">
 <div class="panel">
 <h2>Transaction History</h2>
-<div class="table-wrap"><table><thead><tr><th>Date</th><th>Type</th><th>Code</th><th>Product</th><th>Category</th><th>Korean Seal</th><th>SL Seal</th><th class="num">Qty</th><th>Customer</th><th>Source / Notes</th><th>Action</th></tr></thead><tbody id="historyRows"></tbody></table></div>
+<div class="table-wrap"><table><thead><tr><th>Date</th><th>Type</th><th>Code</th><th>Product</th><th>Prod Category</th><th>Condition / Deduct</th><th>Korean Seal</th><th>SL Seal</th><th class="num">Qty</th><th>Customer</th><th>Source / Notes</th><th>Action</th></tr></thead><tbody id="historyRows"></tbody></table></div>
 </div>
 </section>
 
@@ -194,8 +189,8 @@ main{max-width:1380px;margin:auto;padding:24px;padding-bottom:100px}.notice{back
 
 <script>
 "use strict";
-const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwd1MI4qvFF2sF13uewBFY66i1kg6g5sxuUDKoaVAqsmkDd6C5cOkEUOt4cQBZCSiW8Lg/exec"; 
-const STORAGE_KEY = "stock_manager_pro_cloudsync_v1";
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwc-WCzMMqUQahlluA_sviog_JuPv2xptZnVNswzP0f908dKUVGd045V9pNlmchnDKeNA/exec"; // 
+const STORAGE_KEY = "stock_manager_hard_power_v1";
 
 let state = { products: [], records: [], nextId: 1, nextRecordId: 1 };
 
@@ -259,13 +254,13 @@ async function persist() {
 }
 
 function today(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`}
-function currentYearMonth(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`}
 function esc(v){return String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
 function codeOf(p){return p.code || ("PRD-" + String(p.id).padStart(3,"0"))}
 function nameOf(id){return state.products.find(p=>p.id===id)?.name||"(Removed)"}
+function catOf(id){return state.products.find(p=>p.id===id)?.productCategory||"Hard Drive"}
 
 function render(){
-  const datalistHtml = state.products.map(p=>`<option value="${esc(p.name)} [${codeOf(p)}]">`).join("");
+  const datalistHtml = state.products.map(p=>`<option value="${esc(p.name)} [${codeOf(p)}] (${esc(p.productCategory||'Hard Drive')})">`).join("");
   document.getElementById("productsList").innerHTML = datalistHtml;
   
   const t = today();
@@ -278,7 +273,13 @@ function render(){
   document.getElementById("statIn").textContent = state.records.filter(r=>r.type==="in"&&r.date===t).reduce((s,r)=>s+r.qty,0);
   
   const q = document.getElementById("searchStock").value.toLowerCase();
-  const filteredProducts = state.products.filter(p=>p.name.toLowerCase().includes(q) || codeOf(p).toLowerCase().includes(q)).sort((a,b)=>a.id - b.id);
+  const selectedCatFilter = document.getElementById("filterCategory").value;
+  
+  const filteredProducts = state.products.filter(p=>{
+    const matchesSearch = p.name.toLowerCase().includes(q) || codeOf(p).toLowerCase().includes(q);
+    const matchesCat = !selectedCatFilter || (p.productCategory || "Hard Drive") === selectedCatFilter;
+    return matchesSearch && matchesCat;
+  }).sort((a,b)=>a.id - b.id);
   
   let tWorking=0, tWarranty=0, tScrap=0, tTotalIn=0, tSold=0, tBalance=0;
   let summaryHtml = filteredProducts.map(p=>{
@@ -292,7 +293,7 @@ function render(){
     const warrantyBal = warrantyIn - warrantySold;
     
     const scrapIn = prodRecs.filter(r=>r.type==="in" && r.category==="Scrap").reduce((s,r)=>s+r.qty,0);
-    const scrapSold = prodRecs.filter(r=>r.type==="sale" && r.category==="Scrap").reduce((s,r)=>s+r.qty,0);
+    const scrapSold = prodRecs.filter(r=>r.type === "sale" && r.category==="Scrap").reduce((s,r)=>s+r.qty,0);
     const scrapBal = scrapIn - scrapSold;
     
     const totalIn = workingIn + warrantyIn + scrapIn;
@@ -305,6 +306,7 @@ function render(){
       <td><input type="checkbox" class="row-select" data-id="${p.id}"></td>
       <td><code>${codeOf(p)}</code></td>
       <td><strong>${esc(p.name)}</strong></td>
+      <td><span class="badge cat">${esc(p.productCategory || "Hard Drive")}</span></td>
       <td class="num">${workingBal}</td>
       <td class="num">${warrantyBal}</td>
       <td class="num">${scrapBal}</td>
@@ -315,29 +317,30 @@ function render(){
   }).join("");
   
   if(filteredProducts.length === 0){
-    summaryHtml = `<tr><td colspan="9" class="empty">No products found.</td></tr>`;
+    summaryHtml = `<tr><td colspan="10" class="empty">No products found.</td></tr>`;
   } else {
-    summaryHtml += `<tr class="total-row"><td></td><td>TOTAL</td><td></td><td class="num">${tWorking}</td><td class="num">${tWarranty}</td><td class="num">${tScrap}</td><td class="num">${tTotalIn}</td><td class="num">${tSold}</td><td class="num">${tBalance}</td></tr>`;
+    summaryHtml += `<tr class="total-row"><td></td><td>TOTAL</td><td></td><td class="num">${tWorking}</td><td class="num">${tWarranty}</td><td class="num">${tScrap}</td><td class="num">${tTotalIn}</td><td class="num">${tSold}</td><td class="num">${tBalance}</td><td></td></tr>`;
   }
   document.getElementById("summaryRows").innerHTML = summaryHtml;
 
   const stockInRecords = state.records.filter(r => r.type === "in").sort((a,b)=>b.date.localeCompare(a.date)||b.id-a.id);
   document.getElementById("stockInLogRows").innerHTML = stockInRecords.map(r => {
     const prod = state.products.find(p => p.id === r.productId) || {};
-    return `<tr><td>${esc(r.date)}</td><td><strong>${esc(r.note || "—")}</strong></td><td><code>${codeOf(prod)}</code></td><td><strong>${esc(nameOf(r.productId))}</strong></td><td><span class="badge ${r.category.toLowerCase()}">${esc(r.category)}</span></td><td>${esc(r.koreanDate || "—")}</td><td>${esc(r.sriLankanDate || "—")}</td><td class="num"><strong>${r.qty}</strong></td><td>${esc(r.note || "—")}</td></tr>`;
-  }).join("") || `<tr><td colspan="9" class="empty">No records yet.</td></tr>`;
+    return `<tr><td>${esc(r.date)}</td><td><strong>${esc(r.note || "—")}</strong></td><td><code>${codeOf(prod)}</code></td><td><strong>${esc(prod.name || "(Removed)")}</strong></td><td><span class="badge cat">${esc(prod.productCategory || "Hard Drive")}</span></td><td><span class="badge ${r.category.toLowerCase()}">${esc(r.category)}</span></td><td>${esc(r.koreanDate || "—")}</td><td>${esc(r.sriLankanDate || "—")}</td><td class="num"><strong>${r.qty}</strong></td><td>${esc(r.note || "—")}</td></tr>`;
+  }).join("") || `<tr><td colspan="10" class="empty">No records yet.</td></tr>`;
 
   const salesRecords = state.records.filter(r => r.type === "sale").sort((a,b)=>b.date.localeCompare(a.date)||b.id-a.id);
   document.getElementById("salesLogRows").innerHTML = salesRecords.map(r => {
     const prod = state.products.find(p => p.id === r.productId) || {};
-    return `<tr><td>${esc(r.date)}</td><td><strong>${esc(r.customer || "—")}</strong></td><td><code>${codeOf(prod)}</code></td><td><strong>${esc(nameOf(r.productId))}</strong></td><td>${esc(r.category)}</td><td class="num">${r.qty}</td><td>${esc(r.note || "—")}</td></tr>`;
-  }).join("") || `<tr><td colspan="7" class="empty">No sales yet.</td></tr>`;
+    return `<tr><td>${esc(r.date)}</td><td><strong>${esc(r.customer || "—")}</strong></td><td><code>${codeOf(prod)}</code></td><td><strong>${esc(prod.name || "(Removed)")}</strong></td><td><span class="badge cat">${esc(prod.productCategory || "Hard Drive")}</span></td><td>${esc(r.category)}</td><td class="num">${r.qty}</td><td>${esc(r.note || "—")}</td></tr>`;
+  }).join("") || `<tr><td colspan="8" class="empty">No sales yet.</td></tr>`;
 
-  renderMonthlyClosing();
-
-  document.getElementById("productRows").innerHTML = state.products.sort((a,b)=>a.id - b.id).map(p=>`<tr><td><code>${codeOf(p)}</code></td><td><strong>${esc(p.name)}</strong></td><td><button class="btn danger" onclick="deleteProduct(${p.id})">Delete</button></td></tr>`).join("") || '<tr><td colspan="3" class="empty">No products.</td></tr>';
+  document.getElementById("productRows").innerHTML = state.products.sort((a,b)=>a.id - b.id).map(p=>`<tr><td><code>${codeOf(p)}</code></td><td><strong>${esc(p.name)}</strong></td><td><span class="badge cat">${esc(p.productCategory || "Hard Drive")}</span></td><td><button class="btn danger" onclick="deleteProduct(${p.id})">Delete</button></td></tr>`).join("") || '<tr><td colspan="4" class="empty">No products.</td></tr>';
   
-  document.getElementById("historyRows").innerHTML = [...state.records].sort((a,b)=>b.date.localeCompare(a.date)||b.id-a.id).map(r=>`<tr><td>${esc(r.date)}</td><td>${r.type==="in"?"Stock In":"Sale"}</td><td><code>${codeOf(state.products.find(p=>p.id===r.productId)||{})}</code></td><td>${esc(nameOf(r.productId))}</td><td>${esc(r.category||"—")}</td><td>${esc(r.koreanDate||"—")}</td><td>${esc(r.sriLankanDate||"—")}</td><td class="num">${r.qty}</td><td>${esc(r.customer||"—")}</td><td>${esc(r.note||"—")}</td><td><button class="btn danger" onclick="deleteRecord(${r.id})">Delete</button></td></tr>`).join("") || '<tr><td colspan="11" class="empty">No transactions.</td></tr>';
+  document.getElementById("historyRows").innerHTML = [...state.records].sort((a,b)=>b.date.localeCompare(a.date)||b.id-a.id).map(r=>{
+    const prod = state.products.find(p=>p.id===r.productId)||{};
+    return `<tr><td>${esc(r.date)}</td><td>${r.type==="in"?"Stock In":"Sale"}</td><td><code>${codeOf(prod)}</code></td><td>${esc(prod.name||"—")}</td><td><span class="badge cat">${esc(prod.productCategory||"Hard Drive")}</span></td><td>${esc(r.category||"—")}</td><td>${esc(r.koreanDate||"—")}</td><td>${esc(r.sriLankanDate||"—")}</td><td class="num">${r.qty}</td><td>${esc(r.customer||"—")}</td><td>${esc(r.note||"—")}</td><td><button class="btn danger" onclick="deleteRecord(${r.id})">Delete</button></td></tr>`;
+  }).join("") || '<tr><td colspan="12" class="empty">No transactions.</td></tr>';
 }
 
 function toggleSelectAll(source) {
@@ -352,7 +355,7 @@ function getSelectedProductsData() {
 function exportSelectedExcel() {
   const prods = getSelectedProductsData();
   if(prods.length === 0) return alert("No products available.");
-  let csvContent = "data:text/csv;charset=utf-8,Item Code,Product Model,Working Stock,Warranty Stock,Scrap Stock,Total In,Total Sold,Net Balance\n";
+  let csvContent = "data:text/csv;charset=utf-8,Item Code,Product Model,Category,Working Stock,Warranty Stock,Scrap Stock,Total In,Total Sold,Net Balance\n";
   prods.forEach(p => {
     const prodRecs = state.records.filter(r => r.productId === p.id);
     const wIn = prodRecs.filter(r => r.type === "in" && r.category === "Working").reduce((s,r) => s + r.qty, 0);
@@ -364,7 +367,7 @@ function exportSelectedExcel() {
     const sIn = prodRecs.filter(r => r.type === "in" && r.category === "Scrap").reduce((s,r) => s + r.qty, 0);
     const sSold = prodRecs.filter(r => r.type === "sale" && r.category === "Scrap").reduce((s,r) => s + r.qty, 0);
     const sBal = sIn - sSold;
-    csvContent += `"${codeOf(p)}","${p.name}",${wBal},${warBal},${sBal},${wIn+warIn+sIn},${wSold+warSold+sSold},${wBal+warBal+sBal}\n`;
+    csvContent += `"${codeOf(p)}","${p.name}","${p.productCategory||'Hard Drive'}",${wBal},${warBal},${sBal},${wIn+warIn+sIn},${wSold+warSold+sSold},${wBal+warBal+sBal}\n`;
   });
   const link = document.createElement("a");
   link.setAttribute("href", encodeURI(csvContent));
@@ -374,27 +377,6 @@ function exportSelectedExcel() {
 
 function printSelectedPdf() { window.print(); }
 
-function renderMonthlyClosing() {
-  const monthVal = document.getElementById("closingMonthInput").value;
-  let mwTotal=0, mwWarranty=0, mwScrap=0, mwTotalBal=0;
-  let rowsHtml = state.products.sort((a,b)=>a.id - b.id).map(p => {
-    const prodRecs = state.records.filter(r => r.productId === p.id && (!monthVal || r.date.startsWith(monthVal) || r.date < monthVal));
-    const wIn = prodRecs.filter(r => r.type === "in" && r.category === "Working").reduce((s,r) => s + r.qty, 0);
-    const wSold = prodRecs.filter(r => r.type === "sale" && r.category === "Working").reduce((s,r) => s + r.qty, 0);
-    const warIn = prodRecs.filter(r => r.type === "in" && r.category === "Warranty").reduce((s,r) => s + r.qty, 0);
-    const warSold = prodRecs.filter(r => r.type === "sale" && r.category === "Warranty").reduce((s,r) => s + r.qty, 0);
-    const sIn = prodRecs.filter(r => r.type === "in" && r.category === "Scrap").reduce((s,r) => s + r.qty, 0);
-    const sSold = prodRecs.filter(r => r.type === "sale" && r.category === "Scrap").reduce((s,r) => s + r.qty, 0);
-    
-    let wc = Math.max(0, wIn - wSold), warc = Math.max(0, warIn - warSold), sc = Math.max(0, sIn - sSold);
-    let tc = wc + warc + sc;
-    mwTotal += wc; mwWarranty += warc; mwScrap += sc; mwTotalBal += tc;
-    return `<tr><td><code>${codeOf(p)}</code></td><td><strong>${esc(p.name)}</strong></td><td class="num">${wc}</td><td class="num">${warc}</td><td class="num">${sc}</td><td class="num"><strong>${tc}</strong></td></tr>`;
-  }).join("") || '<tr><td colspan="6" class="empty">No products.</td></tr>';
-  rowsHtml += `<tr class="total-row"><td>TOTAL</td><td></td><td class="num">${mwTotal}</td><td class="num">${mwWarranty}</td><td class="num">${mwScrap}</td><td class="num">${mwTotalBal}</td></tr>`;
-  document.getElementById("monthlyRows").innerHTML = rowsHtml;
-}
-
 document.querySelectorAll("[data-tab]").forEach(btn=>btn.addEventListener("click",()=>{document.querySelectorAll("[data-tab]").forEach(b=>b.classList.toggle("active",b===btn));document.querySelectorAll(".tab").forEach(s=>s.classList.toggle("hidden",s.id!==btn.dataset.tab))}));
 
 document.getElementById("inDate").value = today(); 
@@ -403,10 +385,9 @@ document.getElementById("sDate").value = today();
 document.getElementById("sKoreanDate").value = today();
 document.getElementById("sSriLankanDate").value = today();
 document.getElementById("saleDate").value = today();
-document.getElementById("closingMonthInput").value = currentYearMonth();
 
 document.getElementById("searchStock").addEventListener("input", render);
-document.getElementById("closingMonthInput").addEventListener("change", renderMonthlyClosing);
+document.getElementById("filterCategory").addEventListener("change", render);
 
 function findProductByInput(val){
   if(!val) return null;
@@ -458,10 +439,11 @@ document.getElementById("addSale").onclick = ()=>{
 
 document.getElementById("addProduct").onclick = ()=>{
   const name = document.getElementById("newName").value.trim();
+  const productCategory = document.getElementById("newCategory").value;
   if(!name) return alert("Please enter a product name.");
   if(state.products.some(p=>p.name.toLowerCase()===name.toLowerCase())) return alert("Product already exists.");
   const id = state.nextId++;
-  state.products.push({ id, code: "PRD-" + String(id).padStart(3, "0"), name });
+  state.products.push({ id, code: "PRD-" + String(id).padStart(3, "0"), name, productCategory });
   document.getElementById("newName").value = "";
   persist();
 };
