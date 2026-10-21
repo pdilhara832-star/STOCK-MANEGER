@@ -679,7 +679,29 @@ function downloadCSV(csvContent, fileName) {
   link.click();
   document.body.removeChild(link);
 }
+async function initApp() {
+  showSyncStatus("Loading data from Cloud...", true);
+  try {
+    const res = await fetch(WEB_APP_URL);
+    const cloudData = await res.json();
+    if(cloudData && Array.isArray(cloudData.products) && Array.isArray(cloudData.records)) {
+      state = cloudData;
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    } else {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if(saved) state = JSON.parse(saved);
+    }
+  } catch(e) {
+    console.error("Cloud load error:", e);
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if(saved) state = JSON.parse(saved);
+  }
+  showSyncStatus("Ready", false);
+  render();
+}
+
 initApp();
+  
 </script>
 </body>
 </html>
