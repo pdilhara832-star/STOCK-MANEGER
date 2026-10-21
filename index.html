@@ -653,7 +653,7 @@ function downloadCSV(csvContent, fileName) {
   if(prods.length === 0) return alert(`No products found for ${cat || 'complete inventory'}.`);
   
   let csv = `"${cat ? cat.toUpperCase() + ' STOCK REPORT' : 'K.CEYLON COMPUTERS - COMPLETE STOCK REPORT'}"\n`;
-  csv += `"Product / Model","Available working Stocks","Warranty Stocks","Scrap Stocks","Total Stocks"\n`;
+  csv += `"Product","Available working Stocks","Warranty Stocks","Scrap Stocks","Total Stocks"\n`;
   
   prods.forEach(p => {
     const b = getProductBalances(p.id);
