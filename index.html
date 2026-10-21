@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-
+<title>Stock Manager - Hard & Power Supply Suite</title>
 <style>
 :root{font-family:'Inter',system-ui,sans-serif;color:#0f172a;background:#060911;font-synthesis:none}
 *{box-sizing:border-box}body{margin:0;position:relative;min-height:100vh}
@@ -23,8 +23,9 @@ main{max-width:1380px;margin:auto;padding:24px;padding-bottom:100px}.notice{back
 <video autoplay muted loop id="bgVideo"><source src="itachi.mp4" type="video/mp4"></video>
 <datalist id="productsList"></datalist>
 
-<header><h1>Stock Manager</h1></header>
+<header><h1>Stock Manager Pro</h1><p>Hard Drives &amp; Power Supplies Inventory Suite</p></header>
 <main>
+<div class="notice">✨ <strong>System Ready:</strong> Category-wise Excel Reports &amp; Warranty Tracking Active.</div>
 <div class="stats">
 <div class="stat"><small>Total Products</small><strong id="statProducts">0</strong></div>
 <div class="stat"><small>Total Units in Stock</small><strong id="statStock">0</strong></div>
@@ -38,13 +39,13 @@ main{max-width:1380px;margin:auto;padding:24px;padding-bottom:100px}.notice{back
 <button data-tab="salesLogTab">🛍️ Sales Log</button>
 <button data-tab="conversionLogTab">🔄 Conversion Log</button>
 <button data-tab="receive">➕ Stock In (Working)</button>
-<button data-tab="warrantyTab">🟡 Warranty In</button>
+<button data-tab="warrantyTab">🟡 Warranty Stock</button>
 <button data-tab="scrapTab">🔴 Scrap In</button>
 <button data-tab="sales">🛒 Record Sale</button>
 <button data-tab="conversionTabForm">🔄 Convert / Swap Item</button>
 <button data-tab="products">📦 Add Product</button>
 <button data-tab="history">📜 History</button>
-<button data-tab="backup">⚙️ Backup</button>
+<button data-tab="backup">⚙️ Excel &amp; Backup</button>
 </nav>
 
 <section id="dashboard" class="tab">
@@ -68,9 +69,9 @@ main{max-width:1380px;margin:auto;padding:24px;padding-bottom:100px}.notice{back
   <th>Item Code</th>
   <th>Product / Model</th>
   <th>Category</th>
-  <th class="num">Working</th>
-  <th class="num">Warranty</th>
-  <th class="num">Scrap)</th>
+  <th class="num">Working (Bal)</th>
+  <th class="num">Warranty (Bal)</th>
+  <th class="num">Scrap (Bal)</th>
   <th class="num">Total In</th>
   <th class="num">Total Sold</th>
   <th class="num">Net Balance</th>
@@ -118,7 +119,6 @@ main{max-width:1380px;margin:auto;padding:24px;padding-bottom:100px}.notice{back
 </div>
 </section>
 
-
 <section id="warrantyTab" class="tab hidden">
 <div class="panel">
 <h2>🟡 Record Warranty Stock (In &amp; Claim Issue)</h2>
@@ -139,7 +139,6 @@ main{max-width:1380px;margin:auto;padding:24px;padding-bottom:100px}.notice{back
   <button class="btn" id="saveWarrantyBtn">Save Warranty Record</button>
 </div>
 </div>
-</section>
 </section>
 
 <section id="scrapTab" class="tab hidden">
@@ -212,31 +211,28 @@ main{max-width:1380px;margin:auto;padding:24px;padding-bottom:100px}.notice{back
 <div class="table-wrap"><table><thead><tr><th>Date</th><th>Type</th><th>Staff</th><th>Details / Items</th><th>Condition</th><th class="num">Qty</th><th>Notes</th><th>Action</th></tr></thead><tbody id="historyRows"></tbody></table></div>
 </div>
 </section>
+
 <section id="backup" class="tab hidden">
 <div class="panel">
 <h2>📊 Excel Reports &amp; Backup</h2>
-<p style="color:#94a3b8;font-size:13px;margin-bottom:18px;">Download category-wise inventory and transaction logs as Excel (CSV) reports, or restore from a backup JSON file.</p>
+<p style="color:#94a3b8;font-size:13px;margin-bottom:18px;">Download category-wise stock reports in exact Excel format, or restore from a backup JSON file.</p>
 <div class="actions">
-
-  <button class="btn success" onclick="exportCategoryExcel('Hard Drive')">📥 Download Hard Drives Excel (CSV)</button>
-  <button class="btn success" onclick="exportCategoryExcel('Power Supply')">📥 Download Power Supplies Excel (CSV)</button>
-  <button class="btn" onclick="exportCategoryExcel('')">📥 Download All Complete Inventory</button>
-  <button class="btn" id="exportStockInExcelBtn">📥 Download Stock In Log Excel</button>
-  <button class="btn" id="exportSalesExcelBtn">📥 Download Sales Log Excel</button>
+  <button class="btn success" onclick="exportCategoryExcel('Hard Drive')">📥 Download Hard Drives Excel</button>
+  <button class="btn success" onclick="exportCategoryExcel('Power Supply')">📥 Download Power Supplies Excel</button>
+  <button class="btn" onclick="exportCategoryExcel('')">📥 Download Complete Inventory</button>
   <label class="btn" style="cursor:pointer; display:inline-block; margin:0; line-height: normal; background:linear-gradient(135deg,#7c3aed,#6d28d9);">
-    📁 Restore Backup (Upload JSON)
+    📁 Restore Backup (JSON)
     <input type="file" id="importFile" accept=".json" style="display:none;" onchange="restoreBackup(event)">
   </label>
   <button class="btn danger" id="resetBtn">🗑️ Delete All Data</button>
 </div>
 </div>
 </section>
-
 </main>
 
 <script>
 "use strict";
-const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwxD6Q30QCsAnFcnzVGoq5umIPEzLEmw5y-UZYCvNR9KNaLf0DYPpZ3ba4LvhvoPbVe2g/exec";
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwwYZYo83AaXllPA1ZfKBfO9F0HzUMh7QRNWzbN59cHbrlCevPrrm_ZG48JqBizCCnC3A/exec"; 
 const STORAGE_KEY = "stock_manager_hard_power_v5";
 
 let state = { products: [], records: [], nextId: 1, nextRecordId: 1 };
@@ -514,16 +510,47 @@ if(addInBtn) addInBtn.onclick = ()=>{
   persist();
 };
 
-const addWarrantyInBtn = document.getElementById("addWarrantyIn");
-if(addWarrantyInBtn) addWarrantyInBtn.onclick = ()=>{
-  const p = findProductByInput(document.getElementById("wProductInput")?.value);
-  const qty = Number(document.getElementById("wQty")?.value);
-  const date = document.getElementById("wDate")?.value;
-  const staff = document.getElementById("wStaff")?.value.trim();
-  if(!p || !qty || qty < 1 || !date) return alert("Please select a valid product, quantity, and date.");
-  state.records.push({id: state.nextRecordId++, type: "in", productId: p.id, category: "Warranty", koreanDate: "", sriLankanDate: "", qty, date, customer: "", staff, note: document.getElementById("wNote")?.value.trim()});
-  persist();
-};
+const saveWarrantyBtn = document.getElementById("saveWarrantyBtn");
+if(saveWarrantyBtn) {
+  saveWarrantyBtn.onclick = () => {
+    const p = findProductByInput(document.getElementById("wProductInput")?.value);
+    const qty = Number(document.getElementById("wQty")?.value);
+    const date = document.getElementById("wDate")?.value;
+    const staff = document.getElementById("wStaff")?.value.trim();
+    const actionType = document.getElementById("wActionType")?.value;
+    const note = document.getElementById("wNote")?.value.trim();
+
+    if(!p || !qty || qty < 1 || !date) return alert("Please select a valid product, quantity, and date.");
+
+    if(actionType === "In") {
+      state.records.push({
+        id: state.nextRecordId++,
+        type: "in",
+        productId: p.id,
+        category: "Warranty",
+        qty: qty,
+        date: date,
+        staff: staff,
+        note: (note ? note + " " : "") + "[Warranty In: +Change]"
+      });
+    } else {
+      state.records.push({
+        id: state.nextRecordId++,
+        type: "sale",
+        productId: p.id,
+        category: "Warranty",
+        qty: qty,
+        date: date,
+        staff: staff,
+        customer: "Warranty Claim",
+        note: (note ? note + " " : "") + "[Warranty Issue: -Less]"
+      });
+    }
+
+    persist();
+    alert(`Warranty record saved successfully as (${actionType === "In" ? "+Change" : "-Less"})!`);
+  };
+}
 
 const addScrapInBtn = document.getElementById("addScrapIn");
 if(addScrapInBtn) addScrapInBtn.onclick = ()=>{
@@ -598,11 +625,28 @@ window.deleteRecord = id => {
   if(confirm("Delete transaction?")) { state.records = state.records.filter(r=>r.id!==id); persist(); }
 };
 
-const exportBtn = document.getElementById("exportBtn");
-if(exportBtn) exportBtn.onclick = ()=>{
-  const blob = new Blob([JSON.stringify(state, null, 2)], {type:"application/json"});
-  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = `stock-backup-${today()}.json`; a.click();
-};
+function exportCategoryExcel(cat) {
+  const prods = cat ? state.products.filter(p => (p.productCategory || 'Hard Drive') === cat) : state.products;
+  if(prods.length === 0) return alert(`No products found for ${cat || 'complete inventory'}.`);
+  
+  let csv = `"${cat ? cat.toUpperCase() + ' STOCK REPORT' : 'K.CEYLON COMPUTERS - COMPLETE STOCK REPORT'}"\n`;
+  csv += `"Product / Model","Available working Stocks","Warranty Stocks","Scrap Stocks","Total Stocks"\n`;
+  
+  prods.forEach(p => {
+    const b = getProductBalances(p.id);
+    csv += `"${p.name}",${b.workingBal},${b.warrantyBal},${b.scrapBal},${b.netBalance}\n`;
+  });
+  
+  const fileName = cat ? `${cat.toLowerCase().replace(' ', '-')}-stock-${today()}.csv` : `complete-stock-report-${today()}.csv`;
+  
+  const blob = new Blob(["\ufeff" + csv], {type: "text/csv;charset=utf-8;"});
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = fileName;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
 
 function restoreBackup(event) {
   const file = event.target.files[0];
@@ -633,75 +677,6 @@ if(resetBtn) resetBtn.onclick = ()=>{
 };
 
 initApp();
-  function exportCategoryExcel(cat) {
-  const prods = cat ? state.products.filter(p => (p.productCategory || 'Hard Drive') === cat) : state.products;
-  if(prods.length === 0) return alert(`No products found for ${cat || 'complete inventory'}.`);
-  
-  let csv = "Item Code,Product Model,Category,Working Balance,Warranty Balance,Scrap Balance,Total In,Total Sold,Net Balance,Status\n";
-  prods.forEach(p => {
-    const b = getProductBalances(p.id);
-    const status = b.workingBal < 3 ? "Low Stock" : "Normal";
-    csv += `"${codeOf(p)}","${p.name}","${p.productCategory||'Hard Drive'}",${b.workingBal},${b.warrantyBal},${b.scrapBal},${b.totalIn},${b.totalSold},${b.netBalance},"${status}"\n`;
-  });
-  
-  const fileName = cat ? `${cat.toLowerCase().replace(' ', '-')}-inventory-${today()}.csv` : `complete-inventory-report-${today()}.csv`;
-  downloadCSV(csv, fileName);
-}
-
-function downloadCSV(csvContent, fileName) {
-  const blob = new Blob(["\ufeff" + csvContent], {type: "text/csv;charset=utf-8;"});
-  const link = document.createElement("a");
-  link.href = URL.createObjectURL(blob);
-  link.download = fileName;
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-}; 
-  function exportCategoryExcel(cat) {
-  const prods = cat ? state.products.filter(p => (p.productCategory || 'Hard Drive') === cat) : state.products;
-  if(prods.length === 0) return alert(`No products found for ${cat || 'complete inventory'}.`);
-  
-  let csv = `"${cat ? cat.toUpperCase() + ' STOCK REPORT' : 'K.CEYLON COMPUTERS - COMPLETE STOCK REPORT'}"\n`;
-  csv += `"Product / Model","Available working Stocks","Warranty Stocks","Scrap Stocks","Total Stocks"\n`;
-  
-  prods.forEach(p => {
-    const b = getProductBalances(p.id);
-    csv += `"${p.name}",${b.workingBal},${b.warrantyBal},${b.scrapBal},${b.netBalance}\n`;
-  });
-  
-  const fileName = cat ? `${cat.toLowerCase().replace(' ', '-')}-stock-${today()}.csv` : `complete-stock-report-${today()}.csv`;
-  
-  const blob = new Blob(["\ufeff" + csv], {type: "text/csv;charset=utf-8;"});
-  const link = document.createElement("a");
-  link.href = URL.createObjectURL(blob);
-  link.download = fileName;
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-}
-async function initApp() {
-  showSyncStatus("Loading data from Cloud...", true);
-  try {
-    const res = await fetch(WEB_APP_URL);
-    const cloudData = await res.json();
-    if(cloudData && Array.isArray(cloudData.products) && Array.isArray(cloudData.records)) {
-      state = cloudData;
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-    } else {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if(saved) state = JSON.parse(saved);
-    }
-  } catch(e) {
-    console.error("Cloud load error:", e);
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if(saved) state = JSON.parse(saved);
-  }
-  showSyncStatus("Ready", false);
-  render();
-}
-
-initApp();
-  
 </script>
 </body>
 </html>
