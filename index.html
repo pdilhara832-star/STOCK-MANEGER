@@ -118,18 +118,28 @@ main{max-width:1380px;margin:auto;padding:24px;padding-bottom:100px}.notice{back
 </div>
 </section>
 
+
 <section id="warrantyTab" class="tab hidden">
 <div class="panel">
-<h2>🟡 Record Warranty Stock In</h2>
+<h2>🟡 Record Warranty Stock (In &amp; Claim Issue)</h2>
 <div class="grid">
 <div class="field"><label>Date</label><input id="wDate" type="date"></div>
 <div class="field"><label>Staff / Handler Name</label><input id="wStaff" placeholder="Your name / Technician"></div>
 <div class="field"><label>Product Name / Code</label><input list="productsList" id="wProductInput" placeholder="Type part of name..."></div>
-<div class="field"><label>Quantity Received</label><input id="wQty" type="number" min="1" step="1" placeholder="e.g. 2"></div>
-<div class="field"><label>Supplier / Source</label><input id="wNote" placeholder="Warranty Supplier / Ref"></div>
+<div class="field"><label>Action Type</label>
+  <select id="wActionType">
+    <option value="In">➕ Warranty Received (+ Change)</option>
+    <option value="Issue">➖ Warranty Issued/Claimed (- Less)</option>
+  </select>
 </div>
-<div class="actions"><button class="btn" id="addWarrantyIn">Save Warranty Stock</button></div>
+<div class="field"><label>Quantity</label><input id="wQty" type="number" min="1" step="1" placeholder="e.g. 1"></div>
+<div class="field"><label>Supplier / Customer / Ref</label><input id="wNote" placeholder="Notes / Reference"></div>
 </div>
+<div class="actions">
+  <button class="btn" id="saveWarrantyBtn">Save Warranty Record</button>
+</div>
+</div>
+</section>
 </section>
 
 <section id="scrapTab" class="tab hidden">
