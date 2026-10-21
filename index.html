@@ -647,7 +647,8 @@ function downloadCSV(csvContent, fileName) {
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
-function exportCategoryExcel(cat) {
+
+  function exportCategoryExcel(cat) {
   const prods = cat ? state.products.filter(p => (p.productCategory || 'Hard Drive') === cat) : state.products;
   if(prods.length === 0) return alert(`No products found for ${cat || 'complete inventory'}.`);
   
@@ -669,6 +670,7 @@ function exportCategoryExcel(cat) {
   link.click();
   document.body.removeChild(link);
 }
+
 </script>
 </body>
 </html>
