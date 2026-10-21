@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Stock Manager</title>
+<title>Stock Manager - Hard & Power Supply Suite</title>
 <style>
 :root{font-family:'Inter',system-ui,sans-serif;color:#0f172a;background:#060911;font-synthesis:none}
 *{box-sizing:border-box}body{margin:0;position:relative;min-height:100vh}
@@ -25,7 +25,14 @@ main{max-width:1380px;margin:auto;padding:24px;padding-bottom:100px}.notice{back
 
 <header><h1>Stock Manager Pro</h1><p>Hard Drives &amp; Power Supplies Inventory Suite</p></header>
 <main>
-
+<div class="notice">✨ <strong>System Ready:</strong> Item Mismatch Conversion &amp; Staff Tracking Enabled.</div>
+<div class="stats">
+<div class="stat"><small>Total Products</small><strong id="statProducts">0</strong></div>
+<div class="stat"><small>Total Units in Stock</small><strong id="statStock">0</strong></div>
+<div class="stat"><small>Units Sold Today</small><strong id="statSold">0</strong></div>
+<div class="stat"><small>Stock Received Today</small><strong id="statIn">0</strong></div>
+<div class="stat"><small>Low Stock Items (<3)</small><strong id="statLowStock" style="color:#f87171">0</strong></div>
+</div>
 <nav class="tabs">
 <button class="active" data-tab="dashboard">📊 Inventory Summary</button>
 <button data-tab="stockInLogTab">📥 Stock In Log</button>
@@ -214,8 +221,8 @@ main{max-width:1380px;margin:auto;padding:24px;padding-bottom:100px}.notice{back
 
 <script>
 "use strict";
-const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbz54Vizqb5bKPg3v2Z6lWzROznJN3rfU1MrfQf2v_rWKlOdx_FQg1umdbdAUvupIuAkTw/exec"; 
-const STORAGE_KEY = "stock_manager_hard_power_v4";
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxg5UqwaKVjLSck5Isu24gzUgy9-fLpr5IfXK3TgX_mHkNB3fMq3_too25Dr6hxxkYgPQ/exec";
+const STORAGE_KEY = "stock_manager_hard_power_v5";
 
 let state = { products: [], records: [], nextId: 1, nextRecordId: 1 };
 
@@ -244,7 +251,7 @@ async function initApp() {
   try {
     const res = await fetch(WEB_APP_URL);
     const cloudData = await res.json();
-    if(cloudData && Array.isArray(cloudData.products) && Array.isArray(cloudData.records) && cloudData.products.length > 0) {
+    if(cloudData && Array.isArray(cloudData.products) && Array.isArray(cloudData.records)) {
       state = cloudData;
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     } else {
@@ -312,16 +319,25 @@ function getProductBalances(productId) {
   return { workingBal, warrantyBal, scrapBal, totalIn, totalSold, netBalance };
 }
 
+function safeSet(id, val) {
+  const el = document.getElementById(id);
+  if(el) el.textContent = val;
+}
+
 function render(){
-  const datalistHtml = state.products.map(p=>`<option value="${esc(p.name)} [${codeOf(p)}] (${esc(p.productCategory||'Hard Drive')})">`).join("");
-  document.getElementById("productsList").innerHTML = datalistHtml;
+  const pList = document.getElementById("productsList");
+  if(pList) {
+    pList.innerHTML = state.products.map(p=>`<option value="${esc(p.name)} [${codeOf(p)}] (${esc(p.productCategory||'Hard Drive')})">`).join("");
+  }
   
   const t = today();
   const totalInAll = state.records.filter(r=>r.type==="in").reduce((s,r)=>s+r.qty,0);
   const totalSoldAll = state.records.filter(r=>r.type==="sale").reduce((s,r)=>s+r.qty,0);
   
-  const q = document.getElementById("searchStock").value.toLowerCase();
-  const selectedCatFilter = document.getElementById("filterCategory").value;
+  const searchEl = document.getElementById("searchStock");
+  const q = searchEl ? searchEl.value.toLowerCase() : "";
+  const catFilterEl = document.getElementById("filterCategory");
+  const selectedCatFilter = catFilterEl ? catFilterEl.value : "";
   
   const filteredProducts = state.products.filter(p=>{
     const matchesSearch = p.name.toLowerCase().includes(q) || codeOf(p).toLowerCase().includes(q);
@@ -354,51 +370,69 @@ function render(){
     </tr>`;
   }).join("");
   
-  document.getElementById("statProducts").textContent = state.products.length;
-  document.getElementById("statStock").textContent = totalInAll - totalSoldAll;
-  document.getElementById("statSold").textContent = state.records.filter(r=>r.type==="sale"&&r.date===t).reduce((s,r)=>s+r.qty,0);
-  document.getElementById("statIn").textContent = state.records.filter(r=>r.type==="in"&&r.date===t).reduce((s,r)=>s+r.qty,0);
-  document.getElementById("statLowStock").textContent = lowStockCount;
+  safeSet("statProducts", state.products.length);
+  safeSet("statStock", totalInAll - totalSoldAll);
+  safeSet("statSold", state.records.filter(r=>r.type==="sale"&&r.date===t).reduce((s,r)=>s+r.qty,0));
+  safeSet("statIn", state.records.filter(r=>r.type==="in"&&r.date===t).reduce((s,r)=>s+r.qty,0));
+  safeSet("statLowStock", lowStockCount);
 
-  if(filteredProducts.length === 0){
-    summaryHtml = `<tr><td colspan="11" class="empty">No products found.</td></tr>`;
-  } else {
-    summaryHtml += `<tr class="total-row"><td></td><td>TOTAL</td><td></td><td></td><td class="num">${tWorking}</td><td class="num">${tWarranty}</td><td class="num">${tScrap}</td><td class="num">${tTotalIn}</td><td class="num">${tSold}</td><td class="num">${tBalance}</td><td></td></tr>`;
+  const sumRows = document.getElementById("summaryRows");
+  if(sumRows) {
+    if(filteredProducts.length === 0){
+      summaryHtml = `<tr><td colspan="11" class="empty">No products found.</td></tr>`;
+    } else {
+      summaryHtml += `<tr class="total-row"><td></td><td>TOTAL</td><td></td><td></td><td class="num">${tWorking}</td><td class="num">${tWarranty}</td><td class="num">${tScrap}</td><td class="num">${tTotalIn}</td><td class="num">${tSold}</td><td class="num">${tBalance}</td><td></td></tr>`;
+    }
+    sumRows.innerHTML = summaryHtml;
   }
-  document.getElementById("summaryRows").innerHTML = summaryHtml;
 
   const stockInRecords = state.records.filter(r => r.type === "in").sort((a,b)=>b.date.localeCompare(a.date)||b.id-a.id);
-  document.getElementById("stockInLogRows").innerHTML = stockInRecords.map(r => {
-    const prod = state.products.find(p => p.id === r.productId) || {};
-    return `<tr><td>${esc(r.date)}</td><td><strong>${esc(r.staff || "—")}</strong></td><td>${esc(r.note || "—")}</td><td><code>${codeOf(prod)}</code></td><td><strong>${esc(prod.name || "(Removed)")}</strong></td><td><span class="badge cat">${esc(prod.productCategory || "Hard Drive")}</span></td><td><span class="badge ${r.category.toLowerCase()}">${esc(r.category)}</span></td><td>${esc(r.koreanDate || "—")}</td><td>${esc(r.sriLankanDate || "—")}</td><td class="num"><strong>${r.qty}</strong></td><td>${esc(r.note || "—")}</td></tr>`;
-  }).join("") || `<tr><td colspan="11" class="empty">No records yet.</td></tr>`;
+  const stockInRowsEl = document.getElementById("stockInLogRows");
+  if(stockInRowsEl) {
+    stockInRowsEl.innerHTML = stockInRecords.map(r => {
+      const prod = state.products.find(p => p.id === r.productId) || {};
+      return `<tr><td>${esc(r.date)}</td><td><strong>${esc(r.staff || "—")}</strong></td><td>${esc(r.note || "—")}</td><td><code>${codeOf(prod)}</code></td><td><strong>${esc(prod.name || "(Removed)")}</strong></td><td><span class="badge cat">${esc(prod.productCategory || "Hard Drive")}</span></td><td><span class="badge ${r.category.toLowerCase()}">${esc(r.category)}</span></td><td>${esc(r.koreanDate || "—")}</td><td>${esc(r.sriLankanDate || "—")}</td><td class="num"><strong>${r.qty}</strong></td><td>${esc(r.note || "—")}</td></tr>`;
+    }).join("") || `<tr><td colspan="11" class="empty">No records yet.</td></tr>`;
+  }
 
   const salesRecords = state.records.filter(r => r.type === "sale").sort((a,b)=>b.date.localeCompare(a.date)||b.id-a.id);
-  document.getElementById("salesLogRows").innerHTML = salesRecords.map(r => {
-    const prod = state.products.find(p => p.id === r.productId) || {};
-    return `<tr><td>${esc(r.date)}</td><td><strong>${esc(r.staff || "—")}</strong></td><td>${esc(r.customer || "—")}</td><td><code>${codeOf(prod)}</code></td><td><strong>${esc(prod.name || "(Removed)")}</strong></td><td><span class="badge cat">${esc(prod.productCategory || "Hard Drive")}</span></td><td>${esc(r.category)}</td><td class="num">${r.qty}</td><td>${esc(r.note || "—")}</td></tr>`;
-  }).join("") || `<tr><td colspan="9" class="empty">No sales yet.</td></tr>`;
+  const salesLogRowsEl = document.getElementById("salesLogRows");
+  if(salesLogRowsEl) {
+    salesLogRowsEl.innerHTML = salesRecords.map(r => {
+      const prod = state.products.find(p => p.id === r.productId) || {};
+      return `<tr><td>${esc(r.date)}</td><td><strong>${esc(r.staff || "—")}</strong></td><td>${esc(r.customer || "—")}</td><td><code>${codeOf(prod)}</code></td><td><strong>${esc(prod.name || "(Removed)")}</strong></td><td><span class="badge cat">${esc(prod.productCategory || "Hard Drive")}</span></td><td>${esc(r.category)}</td><td class="num">${r.qty}</td><td>${esc(r.note || "—")}</td></tr>`;
+    }).join("") || `<tr><td colspan="9" class="empty">No sales yet.</td></tr>`;
+  }
 
   const convRecords = state.records.filter(r => r.type === "conversion").sort((a,b)=>b.date.localeCompare(a.date)||b.id-a.id);
-  document.getElementById("conversionLogRows").innerHTML = convRecords.map(r => {
-    const fromP = state.products.find(p => p.id === r.fromProductId) || {};
-    const toP = state.products.find(p => p.id === r.toProductId) || {};
-    return `<tr><td>${esc(r.date)}</td><td><strong>${esc(r.staff || "—")}</strong></td><td><code>${codeOf(fromP)}</code> ${esc(fromP.name || "(Removed)")}</td><td><code>${codeOf(toP)}</code> ${esc(toP.name || "(Removed)")}</td><td><span class="badge ${r.category.toLowerCase()}">${esc(r.category)}</span></td><td class="num"><strong>${r.qty}</strong></td><td>${esc(r.note || "—")}</td></tr>`;
-  }).join("") || `<tr><td colspan="7" class="empty">No conversions yet.</td></tr>`;
+  const convLogRowsEl = document.getElementById("conversionLogRows");
+  if(convLogRowsEl) {
+    convLogRowsEl.innerHTML = convRecords.map(r => {
+      const fromP = state.products.find(p => p.id === r.fromProductId) || {};
+      const toP = state.products.find(p => p.id === r.toProductId) || {};
+      return `<tr><td>${esc(r.date)}</td><td><strong>${esc(r.staff || "—")}</strong></td><td><code>${codeOf(fromP)}</code> ${esc(fromP.name || "(Removed)")}</td><td><code>${codeOf(toP)}</code> ${esc(toP.name || "(Removed)")}</td><td><span class="badge ${r.category.toLowerCase()}">${esc(r.category)}</span></td><td class="num"><strong>${r.qty}</strong></td><td>${esc(r.note || "—")}</td></tr>`;
+    }).join("") || `<tr><td colspan="7" class="empty">No conversions yet.</td></tr>`;
+  }
 
-  document.getElementById("productRows").innerHTML = state.products.sort((a,b)=>a.id - b.id).map(p=>`<tr><td><code>${codeOf(p)}</code></td><td><strong>${esc(p.name)}</strong></td><td><span class="badge cat">${esc(p.productCategory || "Hard Drive")}</span></td><td><button class="btn danger" onclick="deleteProduct(${p.id})">Delete</button></td></tr>`).join("") || '<tr><td colspan="4" class="empty">No products.</td></tr>';
+  const productRowsEl = document.getElementById("productRows");
+  if(productRowsEl) {
+    productRowsEl.innerHTML = state.products.sort((a,b)=>a.id - b.id).map(p=>`<tr><td><code>${codeOf(p)}</code></td><td><strong>${esc(p.name)}</strong></td><td><span class="badge cat">${esc(p.productCategory || "Hard Drive")}</span></td><td><button class="btn danger" onclick="deleteProduct(${p.id})">Delete</button></td></tr>`).join("") || '<tr><td colspan="4" class="empty">No products.</td></tr>';
+  }
   
-  document.getElementById("historyRows").innerHTML = [...state.records].sort((a,b)=>b.date.localeCompare(a.date)||b.id-a.id).map(r=>{
-    if(r.type === "conversion") {
-      const fromP = state.products.find(p=>p.id===r.fromProductId)||{};
-      const toP = state.products.find(p=>p.id===r.toProductId)||{};
-      return `<tr><td>${esc(r.date)}</td><td><span class="badge cat">Conversion</span></td><td><strong>${esc(r.staff||"—")}</strong></td><td>From: ${codeOf(fromP)} ${esc(fromP.name||"—")} ➔ To: ${codeOf(toP)} ${esc(toP.name||"—")}</td><td>${esc(r.category)}</td><td class="num">${r.qty}</td><td>${esc(r.note||"—")}</td><td><button class="btn danger" onclick="deleteRecord(${r.id})">Delete</button></td></tr>`;
-    } else {
-      const prod = state.products.find(p=>p.id===r.productId)||{};
-      const detailText = `${codeOf(prod)} - ${esc(prod.name||"—")} (${r.type === "in" ? "Source/Supplier: " + (r.note||"—") : "Customer: " + (r.customer||"—")})`;
-      return `<tr><td>${esc(r.date)}</td><td>${r.type==="in"?"Stock In":"Sale"}</td><td><strong>${esc(r.staff||"—")}</strong></td><td>${detailText}</td><td>${esc(r.category||"—")}</td><td class="num">${r.qty}</td><td>${esc(r.note||"—")}</td><td><button class="btn danger" onclick="deleteRecord(${r.id})">Delete</button></td></tr>`;
-    }
-  }).join("") || '<tr><td colspan="8" class="empty">No transactions.</td></tr>';
+  const historyRowsEl = document.getElementById("historyRows");
+  if(historyRowsEl) {
+    historyRowsEl.innerHTML = [...state.records].sort((a,b)=>b.date.localeCompare(a.date)||b.id-a.id).map(r=>{
+      if(r.type === "conversion") {
+        const fromP = state.products.find(p=>p.id===r.fromProductId)||{};
+        const toP = state.products.find(p=>p.id===r.toProductId)||{};
+        return `<tr><td>${esc(r.date)}</td><td><span class="badge cat">Conversion</span></td><td><strong>${esc(r.staff||"—")}</strong></td><td>From: ${codeOf(fromP)} ${esc(fromP.name||"—")} ➔ To: ${codeOf(toP)} ${esc(toP.name||"—")}</td><td>${esc(r.category)}</td><td class="num">${r.qty}</td><td>${esc(r.note||"—")}</td><td><button class="btn danger" onclick="deleteRecord(${r.id})">Delete</button></td></tr>`;
+      } else {
+        const prod = state.products.find(p=>p.id===r.productId)||{};
+        const detailText = `${codeOf(prod)} - ${esc(prod.name||"—")} (${r.type === "in" ? "Source/Supplier: " + (r.note||"—") : "Customer: " + (r.customer||"—")})`;
+        return `<tr><td>${esc(r.date)}</td><td>${r.type==="in"?"Stock In":"Sale"}</td><td><strong>${esc(r.staff||"—")}</strong></td><td>${detailText}</td><td>${esc(r.category||"—")}</td><td class="num">${r.qty}</td><td>${esc(r.note||"—")}</td><td><button class="btn danger" onclick="deleteRecord(${r.id})">Delete</button></td></tr>`;
+      }
+    }).join("") || '<tr><td colspan="8" class="empty">No transactions.</td></tr>';
+  }
 }
 
 function toggleSelectAll(source) {
@@ -429,16 +463,19 @@ function printSelectedPdf() { window.print(); }
 
 document.querySelectorAll("[data-tab]").forEach(btn=>btn.addEventListener("click",()=>{document.querySelectorAll("[data-tab]").forEach(b=>b.classList.toggle("active",b===btn));document.querySelectorAll(".tab").forEach(s=>s.classList.toggle("hidden",s.id!==btn.dataset.tab))}));
 
-document.getElementById("inDate").value = today(); 
-document.getElementById("wDate").value = today(); 
-document.getElementById("sDate").value = today(); 
-document.getElementById("sKoreanDate").value = today();
-document.getElementById("sSriLankanDate").value = today();
-document.getElementById("saleDate").value = today();
-document.getElementById("convDate").value = today();
+const setValIfExists = (id, val) => { const el = document.getElementById(id); if(el) el.value = val; };
+setValIfExists("inDate", today());
+setValIfExists("wDate", today());
+setValIfExists("sDate", today());
+setValIfExists("sKoreanDate", today());
+setValIfExists("sSriLankanDate", today());
+setValIfExists("saleDate", today());
+setValIfExists("convDate", today());
 
-document.getElementById("searchStock").addEventListener("input", render);
-document.getElementById("filterCategory").addEventListener("change", render);
+const searchStockEl = document.getElementById("searchStock");
+if(searchStockEl) searchStockEl.addEventListener("input", render);
+const filterCategoryEl = document.getElementById("filterCategory");
+if(filterCategoryEl) filterCategoryEl.addEventListener("change", render);
 
 function findProductByInput(val){
   if(!val) return null;
@@ -451,55 +488,60 @@ function findProductByInput(val){
   return state.products.find(p => codeOf(p).toLowerCase() === cleanVal.toLowerCase()) || state.products.find(p => p.name.toLowerCase() === cleanVal.toLowerCase()) || [...state.products].sort((a,b)=>b.name.length-a.name.length).find(p => cleanVal.toLowerCase().includes(p.name.toLowerCase()));
 }
 
-document.getElementById("addIn").onclick = ()=>{
-  const p = findProductByInput(document.getElementById("inProductInput").value);
-  const qty = Number(document.getElementById("inQty").value);
-  const date = document.getElementById("inDate").value;
-  const staff = document.getElementById("inStaff").value.trim();
+const addInBtn = document.getElementById("addIn");
+if(addInBtn) addInBtn.onclick = ()=>{
+  const p = findProductByInput(document.getElementById("inProductInput")?.value);
+  const qty = Number(document.getElementById("inQty")?.value);
+  const date = document.getElementById("inDate")?.value;
+  const staff = document.getElementById("inStaff")?.value.trim();
   if(!p || !qty || qty < 1 || !date) return alert("Please select a valid product, quantity, and date.");
-  state.records.push({id: state.nextRecordId++, type: "in", productId: p.id, category: "Working", koreanDate: "", sriLankanDate: "", qty, date, customer: "", staff, note: document.getElementById("inNote").value.trim()});
+  state.records.push({id: state.nextRecordId++, type: "in", productId: p.id, category: "Working", koreanDate: "", sriLankanDate: "", qty, date, customer: "", staff, note: document.getElementById("inNote")?.value.trim()});
   persist();
 };
 
-document.getElementById("addWarrantyIn").onclick = ()=>{
-  const p = findProductByInput(document.getElementById("wProductInput").value);
-  const qty = Number(document.getElementById("wQty").value);
-  const date = document.getElementById("wDate").value;
-  const staff = document.getElementById("wStaff").value.trim();
+const addWarrantyInBtn = document.getElementById("addWarrantyIn");
+if(addWarrantyInBtn) addWarrantyInBtn.onclick = ()=>{
+  const p = findProductByInput(document.getElementById("wProductInput")?.value);
+  const qty = Number(document.getElementById("wQty")?.value);
+  const date = document.getElementById("wDate")?.value;
+  const staff = document.getElementById("wStaff")?.value.trim();
   if(!p || !qty || qty < 1 || !date) return alert("Please select a valid product, quantity, and date.");
-  state.records.push({id: state.nextRecordId++, type: "in", productId: p.id, category: "Warranty", koreanDate: "", sriLankanDate: "", qty, date, customer: "", staff, note: document.getElementById("wNote").value.trim()});
+  state.records.push({id: state.nextRecordId++, type: "in", productId: p.id, category: "Warranty", koreanDate: "", sriLankanDate: "", qty, date, customer: "", staff, note: document.getElementById("wNote")?.value.trim()});
   persist();
 };
 
-document.getElementById("addScrapIn").onclick = ()=>{
-  const p = findProductByInput(document.getElementById("sProductInput").value);
-  const qty = Number(document.getElementById("sQty").value);
-  const date = document.getElementById("sDate").value;
-  const staff = document.getElementById("sStaff").value.trim();
+const addScrapInBtn = document.getElementById("addScrapIn");
+if(addScrapInBtn) addScrapInBtn.onclick = ()=>{
+  const p = findProductByInput(document.getElementById("sProductInput")?.value);
+  const qty = Number(document.getElementById("sQty")?.value);
+  const date = document.getElementById("sDate")?.value;
+  const staff = document.getElementById("sStaff")?.value.trim();
   if(!p || !qty || qty < 1 || !date) return alert("Please select a valid product, quantity, and date.");
-  state.records.push({id: state.nextRecordId++, type: "in", productId: p.id, category: "Scrap", koreanDate: document.getElementById("sKoreanDate").value, sriLankanDate: document.getElementById("sSriLankanDate").value, qty, date, customer: "", staff, note: document.getElementById("sNote").value.trim()});
+  state.records.push({id: state.nextRecordId++, type: "in", productId: p.id, category: "Scrap", koreanDate: document.getElementById("sKoreanDate")?.value, sriLankanDate: document.getElementById("sSriLankanDate")?.value, qty, date, customer: "", staff, note: document.getElementById("sNote")?.value.trim()});
   persist();
 };
 
-document.getElementById("addSale").onclick = ()=>{
-  const p = findProductByInput(document.getElementById("saleProductInput").value);
-  const qty = Number(document.getElementById("saleQty").value);
-  const date = document.getElementById("saleDate").value;
-  const customer = document.getElementById("saleCustomer").value.trim();
-  const staff = document.getElementById("saleStaff").value.trim();
+const addSaleBtn = document.getElementById("addSale");
+if(addSaleBtn) addSaleBtn.onclick = ()=>{
+  const p = findProductByInput(document.getElementById("saleProductInput")?.value);
+  const qty = Number(document.getElementById("saleQty")?.value);
+  const date = document.getElementById("saleDate")?.value;
+  const customer = document.getElementById("saleCustomer")?.value.trim();
+  const staff = document.getElementById("saleStaff")?.value.trim();
   if(!p || !qty || qty < 1 || !date || !customer) return alert("Please fill all required sale fields.");
-  state.records.push({id: state.nextRecordId++, type: "sale", productId: p.id, category: document.getElementById("saleCategory").value, koreanDate: "", sriLankanDate: "", qty, date, customer, staff, note: document.getElementById("saleNote").value.trim()});
+  state.records.push({id: state.nextRecordId++, type: "sale", productId: p.id, category: document.getElementById("saleCategory")?.value, koreanDate: "", sriLankanDate: "", qty, date, customer, staff, note: document.getElementById("saleNote")?.value.trim()});
   persist();
 };
 
-document.getElementById("addConversion").onclick = ()=>{
-  const fromP = findProductByInput(document.getElementById("convFromInput").value);
-  const toP = findProductByInput(document.getElementById("convToInput").value);
-  const qty = Number(document.getElementById("convQty").value);
-  const date = document.getElementById("convDate").value;
-  const staff = document.getElementById("convStaff").value.trim();
-  const category = document.getElementById("convCategory").value;
-  const note = document.getElementById("convNote").value.trim();
+const addConversionBtn = document.getElementById("addConversion");
+if(addConversionBtn) addConversionBtn.onclick = ()=>{
+  const fromP = findProductByInput(document.getElementById("convFromInput")?.value);
+  const toP = findProductByInput(document.getElementById("convToInput")?.value);
+  const qty = Number(document.getElementById("convQty")?.value);
+  const date = document.getElementById("convDate")?.value;
+  const staff = document.getElementById("convStaff")?.value.trim();
+  const category = document.getElementById("convCategory")?.value;
+  const note = document.getElementById("convNote")?.value.trim();
   
   if(!fromP || !toP || !qty || qty < 1 || !date) return alert("Please select both 'From' and 'To' products, quantity, and date.");
   if(fromP.id === toP.id) return alert("From product and To product cannot be the same.");
@@ -519,14 +561,16 @@ document.getElementById("addConversion").onclick = ()=>{
   alert("Item converted successfully!");
 };
 
-document.getElementById("addProduct").onclick = ()=>{
-  const name = document.getElementById("newName").value.trim();
-  const productCategory = document.getElementById("newCategory").value;
+const addProductBtn = document.getElementById("addProduct");
+if(addProductBtn) addProductBtn.onclick = ()=>{
+  const nameEl = document.getElementById("newName");
+  const name = nameEl ? nameEl.value.trim() : "";
+  const productCategory = document.getElementById("newCategory")?.value;
   if(!name) return alert("Please enter a product name.");
   if(state.products.some(p=>p.name.toLowerCase()===name.toLowerCase())) return alert("Product already exists.");
   const id = state.nextId++;
   state.products.push({ id, code: "PRD-" + String(id).padStart(3, "0"), name, productCategory });
-  document.getElementById("newName").value = "";
+  if(nameEl) nameEl.value = "";
   persist();
 };
 
@@ -539,7 +583,8 @@ window.deleteRecord = id => {
   if(confirm("Delete transaction?")) { state.records = state.records.filter(r=>r.id!==id); persist(); }
 };
 
-document.getElementById("exportBtn").onclick = ()=>{
+const exportBtn = document.getElementById("exportBtn");
+if(exportBtn) exportBtn.onclick = ()=>{
   const blob = new Blob([JSON.stringify(state, null, 2)], {type:"application/json"});
   const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = `stock-backup-${today()}.json`; a.click();
 };
@@ -567,7 +612,8 @@ function restoreBackup(event) {
   reader.readAsText(file);
 }
 
-document.getElementById("resetBtn").onclick = ()=>{
+const resetBtn = document.getElementById("resetBtn");
+if(resetBtn) resetBtn.onclick = ()=>{
   if(confirm("Delete all data?")){ localStorage.removeItem(STORAGE_KEY); state = { products: [], records: [], nextId: 1, nextRecordId: 1 }; persist(); }
 };
 
