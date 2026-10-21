@@ -648,6 +648,28 @@ function downloadCSV(csvContent, fileName) {
   link.click();
   document.body.removeChild(link);
 }
+  function exportCategoryExcel(cat) {
+  const prods = cat ? state.products.filter(p => (p.productCategory || 'Hard Drive') === cat) : state.products;
+  if(prods.length === 0) return alert(`No products found for ${cat || 'complete inventory'}.`);
+  
+  let csv = `"${cat ? cat.toUpperCase() + ' STOCK REPORT' : 'K.CEYLON COMPUTERS - COMPLETE STOCK REPORT'}"\n`;
+  csv += `"Product / Model","Available working Stocks","Warranty Stocks","Scrap Stocks","Total Stocks"\n`;
+  
+  prods.forEach(p => {
+    const b = getProductBalances(p.id);
+    csv += `"${p.name} [${codeOf(p)}]",${b.workingBal},${b.warrantyBal},${b.scrapBal},${b.netBalance}\n`;
+  });
+  
+  const fileName = cat ? `${cat.toLowerCase().replace(' ', '-')}-stock-${today()}.csv` : `complete-stock-report-${today()}.csv`;
+  
+  const blob = new Blob(["\ufeff" + csv], {type: "text/csv;charset=utf-8;"});
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = fileName;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
 </script>
 </body>
 </html>
