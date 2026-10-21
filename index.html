@@ -206,22 +206,25 @@ main{max-width:1380px;margin:auto;padding:24px;padding-bottom:100px}.notice{back
 
 <section id="backup" class="tab hidden">
 <div class="panel">
-<h2>Backup &amp; Reset</h2>
+<h2>📊 Excel Reports &amp; Backup</h2>
+<p style="color:#94a3b8;font-size:13px;margin-bottom:18px;">Download complete inventory and transaction logs as Excel (CSV) reports, or restore from a backup JSON file.</p>
 <div class="actions">
-  <button class="btn" id="exportBtn">Download Backup JSON</button>
-  <label class="btn success" style="cursor:pointer; display:inline-block; margin:0; line-height: normal;">
+  <button class="btn success" id="exportFullExcelBtn">📥 Download Complete Inventory Excel (CSV)</button>
+  <button class="btn" id="exportStockInExcelBtn">📥 Download Stock In Log Excel</button>
+  <button class="btn" id="exportSalesExcelBtn">📥 Download Sales Log Excel</button>
+  <label class="btn" style="cursor:pointer; display:inline-block; margin:0; line-height: normal; background:linear-gradient(135deg,#7c3aed,#6d28d9);">
     📁 Restore Backup (Upload JSON)
     <input type="file" id="importFile" accept=".json" style="display:none;" onchange="restoreBackup(event)">
   </label>
-  <button class="btn danger" id="resetBtn">Delete All Data</button>
+  <button class="btn danger" id="resetBtn">🗑️ Delete All Data</button>
 </div>
 </div>
-</section>
+</section>  
 </main>
 
 <script>
 "use strict";
-const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxg5UqwaKVjLSck5Isu24gzUgy9-fLpr5IfXK3TgX_mHkNB3fMq3_too25Dr6hxxkYgPQ/exec";
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbx0TasW0gZYB9k_oysKINe8yciIHKC9B3dj63l--C42SWWvTiQmDgTtT3hiyMqAWSMP7A/exec";
 const STORAGE_KEY = "stock_manager_hard_power_v5";
 
 let state = { products: [], records: [], nextId: 1, nextRecordId: 1 };
