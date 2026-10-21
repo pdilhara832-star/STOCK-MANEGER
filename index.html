@@ -208,6 +208,20 @@ main{max-width:1380px;margin:auto;padding:24px;padding-bottom:100px}.notice{back
 <h2>📊 Excel Reports &amp; Backup</h2>
 <p style="color:#94a3b8;font-size:13px;margin-bottom:18px;">Download category-wise inventory and transaction logs as Excel (CSV) reports, or restore from a backup JSON file.</p>
 <div class="actions">
+  function exportCategoryExcel(cat) {
+  const prods = cat ? state.products.filter(p => (p.productCategory || 'Hard Drive') === cat) : state.products;
+  if(prods.length === 0) return alert(`No products found for ${cat || 'complete inventory'}.`);
+  
+  let csv = "Item Code,Product Model,Category,Working Balance,Warranty Balance,Scrap Balance,Total In,Total Sold,Net Balance,Status\n";
+  prods.forEach(p => {
+    const b = getProductBalances(p.id);
+    const status = b.workingBal < 3 ? "Low Stock" : "Normal";
+    csv += `"${codeOf(p)}","${p.name}","${p.productCategory||'Hard Drive'}",${b.workingBal},${b.warrantyBal},${b.scrapBal},${b.totalIn},${b.totalSold},${b.netBalance},"${status}"\n`;
+  });
+  
+  const fileName = cat ? `${cat.toLowerCase().replace(' ', '-')}-inventory-${today()}.csv` : `complete-inventory-report-${today()}.csv`;
+  downloadCSV(csv, fileName);
+}
   <button class="btn success" onclick="exportCategoryExcel('Hard Drive')">📥 Download Hard Drives Excel (CSV)</button>
   <button class="btn success" onclick="exportCategoryExcel('Power Supply')">📥 Download Power Supplies Excel (CSV)</button>
   <button class="btn" onclick="exportCategoryExcel('')">📥 Download All Complete Inventory</button>
