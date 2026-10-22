@@ -232,7 +232,7 @@ main{max-width:1380px;margin:auto;padding:24px;padding-bottom:100px}.notice{back
 
 <script>
 "use strict";
-const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxTtPkrNthuslzbuc8jVBqzl5SndU0TJZyoAYxT_iIaL14_Hb3uf1s7QXzVhO5_Yfa2Ug/exec"; 
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxNwG_Fzkmt406TwMEGBjL7LZmpUGv8spj4onZHEQlcKJn74kBsIAhdOEH1LNcEmWdkEQ/exec";
 const STORAGE_KEY = "stock_manager_hard_power_v5";
 
 let state = { products: [], records: [], nextId: 1, nextRecordId: 1 };
@@ -264,18 +264,31 @@ async function initApp() {
     const cloudData = await res.json();
     if(cloudData && Array.isArray(cloudData.products) && Array.isArray(cloudData.records)) {
       state = cloudData;
+      if(!state.nextId) state.nextId = state.products.length ? Math.max(...state.products.map(p => Number(p.id) || 0)) + 1 : 1;
+      if(!state.nextRecordId) state.nextRecordId = state.records.length ? Math.max(...state.records.map(r => Number(r.id) || 0)) + 1 : 1;
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     } else {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if(saved) state = JSON.parse(saved);
+      loadLocal();
     }
   } catch(e) {
     console.error("Cloud load error:", e);
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if(saved) state = JSON.parse(saved);
+    loadLocal();
   }
   showSyncStatus("Ready", false);
   render();
+}
+
+function loadLocal() {
+  const saved = localStorage.getItem(STORAGE_KEY);
+  if(saved) {
+    try {
+      state = JSON.parse(saved);
+    } catch(err) {
+      console.error("Local parse error:", err);
+    }
+  }
+  if(!state.nextId) state.nextId = state.products.length ? Math.max(...state.products.map(p => Number(p.id) || 0)) + 1 : 1;
+  if(!state.nextRecordId) state.nextRecordId = state.records.length ? Math.max(...state.records.map(r => Number(r.id) || 0)) + 1 : 1;
 }
 
 async function persist() {
@@ -298,29 +311,32 @@ async function persist() {
 
 function today(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`}
 function esc(v){return String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
-function codeOf(p){return p.code || ("PRD-" + String(p.id).padStart(3,"0"))}
+function codeOf(p){
+  const pId = (p.id !== undefined && !isNaN(p.id)) ? Number(p.id) : 1;
+  return p.code || ("PRD-" + String(pId).padStart(3,"0"));
+}
 
 function getProductBalances(productId) {
-  const prodRecs = state.records.filter(r => r.productId === productId);
-  const convOutRecs = state.records.filter(r => r.type === "conversion" && r.fromProductId === productId);
-  const convInRecs = state.records.filter(r => r.type === "conversion" && r.toProductId === productId);
+  const prodRecs = state.records.filter(r => r.productId == productId);
+  const convOutRecs = state.records.filter(r => r.type === "conversion" && r.fromProductId == productId);
+  const convInRecs = state.records.filter(r => r.type === "conversion" && r.toProductId == productId);
   
-  const wIn = prodRecs.filter(r => r.type === "in" && r.category === "Working").reduce((s,r) => s + r.qty, 0);
-  const wSold = prodRecs.filter(r => r.type === "sale" && r.category === "Working").reduce((s,r) => s + r.qty, 0);
-  const wConvOut = convOutRecs.filter(r => r.category === "Working").reduce((s,r) => s + r.qty, 0);
-  const wConvIn = convInRecs.filter(r => r.category === "Working").reduce((s,r) => s + r.qty, 0);
+  const wIn = prodRecs.filter(r => r.type === "in" && r.category === "Working").reduce((s,r) => s + Number(r.qty), 0);
+  const wSold = prodRecs.filter(r => r.type === "sale" && r.category === "Working").reduce((s,r) => s + Number(r.qty), 0);
+  const wConvOut = convOutRecs.filter(r => r.category === "Working").reduce((s,r) => s + Number(r.qty), 0);
+  const wConvIn = convInRecs.filter(r => r.category === "Working").reduce((s,r) => s + Number(r.qty), 0);
   const workingBal = wIn + wConvIn - wSold - wConvOut;
   
-  const warIn = prodRecs.filter(r => r.type === "in" && r.category === "Warranty").reduce((s,r) => s + r.qty, 0);
-  const warSold = prodRecs.filter(r => r.type === "sale" && r.category === "Warranty").reduce((s,r) => s + r.qty, 0);
-  const warConvOut = convOutRecs.filter(r => r.category === "Warranty").reduce((s,r) => s + r.qty, 0);
-  const warConvIn = convInRecs.filter(r => r.category === "Warranty").reduce((s,r) => s + r.qty, 0);
+  const warIn = prodRecs.filter(r => r.type === "in" && r.category === "Warranty").reduce((s,r) => s + Number(r.qty), 0);
+  const warSold = prodRecs.filter(r => r.type === "sale" && r.category === "Warranty").reduce((s,r) => s + Number(r.qty), 0);
+  const warConvOut = convOutRecs.filter(r => r.category === "Warranty").reduce((s,r) => s + Number(r.qty), 0);
+  const warConvIn = convInRecs.filter(r => r.category === "Warranty").reduce((s,r) => s + Number(r.qty), 0);
   const warrantyBal = warIn + warConvIn - warSold - warConvOut;
   
-  const sIn = prodRecs.filter(r => r.type === "in" && r.category === "Scrap").reduce((s,r) => s + r.qty, 0);
-  const sSold = prodRecs.filter(r => r.type === "sale" && r.category === "Scrap").reduce((s,r) => s + r.qty, 0);
-  const sConvOut = convOutRecs.filter(r => r.category === "Scrap").reduce((s,r) => s + r.qty, 0);
-  const sConvIn = convInRecs.filter(r => r.category === "Scrap").reduce((s,r) => s + r.qty, 0);
+  const sIn = prodRecs.filter(r => r.type === "in" && r.category === "Scrap").reduce((s,r) => s + Number(r.qty), 0);
+  const sSold = prodRecs.filter(r => r.type === "sale" && r.category === "Scrap").reduce((s,r) => s + Number(r.qty), 0);
+  const sConvOut = convOutRecs.filter(r => r.category === "Scrap").reduce((s,r) => s + Number(r.qty), 0);
+  const sConvIn = convInRecs.filter(r => r.category === "Scrap").reduce((s,r) => s + Number(r.qty), 0);
   const scrapBal = sIn + sConvIn - sSold - sConvOut;
   
   const totalIn = wIn + warIn + sIn + wConvIn + warConvIn + sConvIn;
@@ -342,8 +358,8 @@ function render(){
   }
   
   const t = today();
-  const totalInAll = state.records.filter(r=>r.type==="in").reduce((s,r)=>s+r.qty,0);
-  const totalSoldAll = state.records.filter(r=>r.type==="sale").reduce((s,r)=>s+r.qty,0);
+  const totalInAll = state.records.filter(r=>r.type==="in").reduce((s,r)=>s+Number(r.qty),0);
+  const totalSoldAll = state.records.filter(r=>r.type==="sale").reduce((s,r)=>s+Number(r.qty),0);
   
   const searchEl = document.getElementById("searchStock");
   const q = searchEl ? searchEl.value.toLowerCase() : "";
@@ -354,7 +370,7 @@ function render(){
     const matchesSearch = p.name.toLowerCase().includes(q) || codeOf(p).toLowerCase().includes(q);
     const matchesCat = !selectedCatFilter || (p.productCategory || "Hard Drive") === selectedCatFilter;
     return matchesSearch && matchesCat;
-  }).sort((a,b)=>a.id - b.id);
+  }).sort((a,b)=>Number(a.id) - Number(b.id));
   
   let tWorking=0, tWarranty=0, tScrap=0, tTotalIn=0, tSold=0, tBalance=0, lowStockCount=0;
   
@@ -383,8 +399,8 @@ function render(){
   
   safeSet("statProducts", state.products.length);
   safeSet("statStock", totalInAll - totalSoldAll);
-  safeSet("statSold", state.records.filter(r=>r.type==="sale"&&r.date===t).reduce((s,r)=>s+r.qty,0));
-  safeSet("statIn", state.records.filter(r=>r.type==="in"&&r.date===t).reduce((s,r)=>s+r.qty,0));
+  safeSet("statSold", state.records.filter(r=>r.type==="sale"&&r.date===t).reduce((s,r)=>s+Number(r.qty),0));
+  safeSet("statIn", state.records.filter(r=>r.type==="in"&&r.date===t).reduce((s,r)=>s+Number(r.qty),0));
   safeSet("statLowStock", lowStockCount);
 
   const sumRows = document.getElementById("summaryRows");
@@ -397,48 +413,48 @@ function render(){
     sumRows.innerHTML = summaryHtml;
   }
 
-  const stockInRecords = state.records.filter(r => r.type === "in").sort((a,b)=>b.date.localeCompare(a.date)||b.id-a.id);
+  const stockInRecords = state.records.filter(r => r.type === "in").sort((a,b)=>b.date.localeCompare(a.date)||Number(b.id)-Number(a.id));
   const stockInRowsEl = document.getElementById("stockInLogRows");
   if(stockInRowsEl) {
     stockInRowsEl.innerHTML = stockInRecords.map(r => {
-      const prod = state.products.find(p => p.id === r.productId) || {};
-      return `<tr><td>${esc(r.date)}</td><td><strong>${esc(r.staff || "—")}</strong></td><td>${esc(r.note || "—")}</td><td><code>${codeOf(prod)}</code></td><td><strong>${esc(prod.name || "(Removed)")}</strong></td><td><span class="badge cat">${esc(prod.productCategory || "Hard Drive")}</span></td><td><span class="badge ${r.category.toLowerCase()}">${esc(r.category)}</span></td><td>${esc(r.koreanDate || "—")}</td><td>${esc(r.sriLankanDate || "—")}</td><td class="num"><strong>${r.qty}</strong></td><td>${esc(r.note || "—")}</td></tr>`;
+      const prod = state.products.find(p => p.id == r.productId) || {};
+      return `<tr><td>${esc(r.date)}</td><td><strong>${esc(r.staff || "—")}</strong></td><td>${esc(r.note || "—")}</td><td><code>${codeOf(prod)}</code></td><td><strong>${esc(prod.name || "(Removed)")}</strong></td><td><span class="badge cat">${esc(prod.productCategory || "Hard Drive")}</span></td><td><span class="badge ${String(r.category||'').toLowerCase()}">${esc(r.category)}</span></td><td>${esc(r.koreanDate || "—")}</td><td>${esc(r.sriLankanDate || "—")}</td><td class="num"><strong>${r.qty}</strong></td><td>${esc(r.note || "—")}</td></tr>`;
     }).join("") || `<tr><td colspan="11" class="empty">No records yet.</td></tr>`;
   }
 
-  const salesRecords = state.records.filter(r => r.type === "sale").sort((a,b)=>b.date.localeCompare(a.date)||b.id-a.id);
+  const salesRecords = state.records.filter(r => r.type === "sale").sort((a,b)=>b.date.localeCompare(a.date)||Number(b.id)-Number(a.id));
   const salesLogRowsEl = document.getElementById("salesLogRows");
   if(salesLogRowsEl) {
     salesLogRowsEl.innerHTML = salesRecords.map(r => {
-      const prod = state.products.find(p => p.id === r.productId) || {};
+      const prod = state.products.find(p => p.id == r.productId) || {};
       return `<tr><td>${esc(r.date)}</td><td><strong>${esc(r.staff || "—")}</strong></td><td>${esc(r.customer || "—")}</td><td><code>${codeOf(prod)}</code></td><td><strong>${esc(prod.name || "(Removed)")}</strong></td><td><span class="badge cat">${esc(prod.productCategory || "Hard Drive")}</span></td><td>${esc(r.category)}</td><td class="num">${r.qty}</td><td>${esc(r.note || "—")}</td></tr>`;
     }).join("") || `<tr><td colspan="9" class="empty">No sales yet.</td></tr>`;
   }
 
-  const convRecords = state.records.filter(r => r.type === "conversion").sort((a,b)=>b.date.localeCompare(a.date)||b.id-a.id);
+  const convRecords = state.records.filter(r => r.type === "conversion").sort((a,b)=>b.date.localeCompare(a.date)||Number(b.id)-Number(a.id));
   const convLogRowsEl = document.getElementById("conversionLogRows");
   if(convLogRowsEl) {
     convLogRowsEl.innerHTML = convRecords.map(r => {
-      const fromP = state.products.find(p => p.id === r.fromProductId) || {};
-      const toP = state.products.find(p => p.id === r.toProductId) || {};
-      return `<tr><td>${esc(r.date)}</td><td><strong>${esc(r.staff || "—")}</strong></td><td><code>${codeOf(fromP)}</code> ${esc(fromP.name || "(Removed)")}</td><td><code>${codeOf(toP)}</code> ${esc(toP.name || "(Removed)")}</td><td><span class="badge ${r.category.toLowerCase()}">${esc(r.category)}</span></td><td class="num"><strong>${r.qty}</strong></td><td>${esc(r.note || "—")}</td></tr>`;
+      const fromP = state.products.find(p => p.id == r.fromProductId) || {};
+      const toP = state.products.find(p => p.id == r.toProductId) || {};
+      return `<tr><td>${esc(r.date)}</td><td><strong>${esc(r.staff || "—")}</strong></td><td><code>${codeOf(fromP)}</code> ${esc(fromP.name || "(Removed)")}</td><td><code>${codeOf(toP)}</code> ${esc(toP.name || "(Removed)")}</td><td><span class="badge ${String(r.category||'').toLowerCase()}">${esc(r.category)}</span></td><td class="num"><strong>${r.qty}</strong></td><td>${esc(r.note || "—")}</td></tr>`;
     }).join("") || `<tr><td colspan="7" class="empty">No conversions yet.</td></tr>`;
   }
 
   const productRowsEl = document.getElementById("productRows");
   if(productRowsEl) {
-    productRowsEl.innerHTML = state.products.sort((a,b)=>a.id - b.id).map(p=>`<tr><td><code>${codeOf(p)}</code></td><td><strong>${esc(p.name)}</strong></td><td><span class="badge cat">${esc(p.productCategory || "Hard Drive")}</span></td><td><button class="btn danger" onclick="deleteProduct(${p.id})">Delete</button></td></tr>`).join("") || '<tr><td colspan="4" class="empty">No products.</td></tr>';
+    productRowsEl.innerHTML = state.products.sort((a,b)=>Number(a.id) - Number(b.id)).map(p=>`<tr><td><code>${codeOf(p)}</code></td><td><strong>${esc(p.name)}</strong></td><td><span class="badge cat">${esc(p.productCategory || "Hard Drive")}</span></td><td><button class="btn danger" onclick="deleteProduct(${p.id})">Delete</button></td></tr>`).join("") || '<tr><td colspan="4" class="empty">No products.</td></tr>';
   }
   
   const historyRowsEl = document.getElementById("historyRows");
   if(historyRowsEl) {
-    historyRowsEl.innerHTML = [...state.records].sort((a,b)=>b.date.localeCompare(a.date)||b.id-a.id).map(r=>{
+    historyRowsEl.innerHTML = [...state.records].sort((a,b)=>b.date.localeCompare(a.date)||Number(b.id)-Number(a.id)).map(r=>{
       if(r.type === "conversion") {
-        const fromP = state.products.find(p=>p.id===r.fromProductId)||{};
-        const toP = state.products.find(p=>p.id===r.toProductId)||{};
+        const fromP = state.products.find(p=>p.id==r.fromProductId)||{};
+        const toP = state.products.find(p=>p.id==r.toProductId)||{};
         return `<tr><td>${esc(r.date)}</td><td><span class="badge cat">Conversion</span></td><td><strong>${esc(r.staff||"—")}</strong></td><td>From: ${codeOf(fromP)} ${esc(fromP.name||"—")} ➔ To: ${codeOf(toP)} ${esc(toP.name||"—")}</td><td>${esc(r.category)}</td><td class="num">${r.qty}</td><td>${esc(r.note||"—")}</td><td><button class="btn danger" onclick="deleteRecord(${r.id})">Delete</button></td></tr>`;
       } else {
-        const prod = state.products.find(p=>p.id===r.productId)||{};
+        const prod = state.products.find(p=>p.id==r.productId)||{};
         const detailText = `${codeOf(prod)} - ${esc(prod.name||"—")} (${r.type === "in" ? "Source/Supplier: " + (r.note||"—") : "Customer: " + (r.customer||"—")})`;
         return `<tr><td>${esc(r.date)}</td><td>${r.type==="in"?"Stock In":"Sale"}</td><td><strong>${esc(r.staff||"—")}</strong></td><td>${detailText}</td><td>${esc(r.category||"—")}</td><td class="num">${r.qty}</td><td>${esc(r.note||"—")}</td><td><button class="btn danger" onclick="deleteRecord(${r.id})">Delete</button></td></tr>`;
       }
@@ -452,7 +468,7 @@ function toggleSelectAll(source) {
 
 function getSelectedProductsData() {
   const selectedIds = Array.from(document.querySelectorAll('.row-select:checked')).map(cb => Number(cb.dataset.id));
-  return selectedIds.length === 0 ? state.products : state.products.filter(p => selectedIds.includes(p.id));
+  return selectedIds.length === 0 ? state.products : state.products.filter(p => selectedIds.includes(Number(p.id)));
 }
 
 function exportSelectedExcel() {
@@ -617,12 +633,12 @@ if(addProductBtn) addProductBtn.onclick = ()=>{
 };
 
 window.deleteProduct = id => {
-  if(state.records.some(r=>r.productId===id || r.fromProductId===id || r.toProductId===id)) return alert("Cannot delete product with history.");
-  if(confirm("Delete product?")) { state.products = state.products.filter(p=>p.id!==id); persist(); }
+  if(state.records.some(r=>r.productId==id || r.fromProductId==id || r.toProductId==id)) return alert("Cannot delete product with history.");
+  if(confirm("Delete product?")) { state.products = state.products.filter(p=>p.id!=id); persist(); }
 };
 
 window.deleteRecord = id => {
-  if(confirm("Delete transaction?")) { state.records = state.records.filter(r=>r.id!==id); persist(); }
+  if(confirm("Delete transaction?")) { state.records = state.records.filter(r=>r.id!=id); persist(); }
 };
 
 function exportCategoryExcel(cat) {
@@ -658,6 +674,8 @@ function restoreBackup(event) {
       if(imported && Array.isArray(imported.products) && Array.isArray(imported.records)) {
         if(confirm("Are you sure you want to restore this backup? Current data will be updated and synced.")) {
           state = imported;
+          if(!state.nextId) state.nextId = state.products.length ? Math.max(...state.products.map(p => Number(p.id) || 0)) + 1 : 1;
+          if(!state.nextRecordId) state.nextRecordId = state.records.length ? Math.max(...state.records.map(r => Number(r.id) || 0)) + 1 : 1;
           persist();
           alert("Backup restored successfully!");
         }
@@ -668,7 +686,7 @@ function restoreBackup(event) {
       alert("Error reading JSON file: " + err.message);
     }
   };
-  reader.readAsText(file);
+  reader.readAsTest(file);
 }
 
 const resetBtn = document.getElementById("resetBtn");
