@@ -23,9 +23,8 @@ main{max-width:1380px;margin:auto;padding:24px;padding-bottom:100px}.notice{back
 <video autoplay muted loop id="bgVideo"><source src="itachi.mp4" type="video/mp4"></video>
 <datalist id="productsList"></datalist>
 
-<header><h1>Stock Manager Pro</h1><p>Hard Drives &amp; Power Supplies Inventory Suite</p></header>
+<header><h1>Stock Manager Pro</header>
 <main>
-<div class="notice">✨ <strong>System Ready:</strong> Category-wise Excel Reports &amp; Warranty Tracking Active.</div>
 <div class="stats">
 <div class="stat"><small>Total Products</small><strong id="statProducts">0</strong></div>
 <div class="stat"><small>Total Units in Stock</small><strong id="statStock">0</strong></div>
@@ -69,9 +68,9 @@ main{max-width:1380px;margin:auto;padding:24px;padding-bottom:100px}.notice{back
   <th>Item Code</th>
   <th>Product / Model</th>
   <th>Category</th>
-  <th class="num">Working (Bal)</th>
-  <th class="num">Warranty (Bal)</th>
-  <th class="num">Scrap (Bal)</th>
+  <th class="num">Working</th>
+  <th class="num">Warranty</th>
+  <th class="num">Scrap</th>
   <th class="num">Total In</th>
   <th class="num">Total Sold</th>
   <th class="num">Net Balance</th>
@@ -129,7 +128,7 @@ main{max-width:1380px;margin:auto;padding:24px;padding-bottom:100px}.notice{back
 <div class="field"><label>Action Type</label>
   <select id="wActionType">
     <option value="In">➕ Warranty Received (+ Change)</option>
-    <option value="Issue">➖ Warranty Issued/Claimed (- Less)</option>
+    <option value="Issue">➖ Warranty Issued /Claimed (- Less)</option>
   </select>
 </div>
 <div class="field"><label>Quantity</label><input id="wQty" type="number" min="1" step="1" placeholder="e.g. 1"></div>
@@ -150,8 +149,8 @@ main{max-width:1380px;margin:auto;padding:24px;padding-bottom:100px}.notice{back
 <div class="field"><label>Product Name / Code</label><input list="productsList" id="sProductInput" placeholder="Type part of name..."></div>
 <div class="field"><label>Quantity Received</label><input id="sQty" type="number" min="1" step="1" placeholder="e.g. 1"></div>
 <div class="field"><label>Korean Seal Date</label><input id="sKoreanDate" type="date"></div>
-<div class="field"><label>Sri Lankan Seal Date</label><input id="sSriLankanDate" type="date"></div>
-<div class="field"><label>Supplier / Source</label><input id="sNote" placeholder="Scrap Supplier / Ref"></div>
+<div class="field"><label>Sri Lanka Seal Date</label><input id="sSriLankanDate" type="date"></div>
+<div class="field"><label>Supplier</label><input id="sNote" placeholder="Scrap Supplier / Ref"></div>
 </div>
 <div class="actions"><button class="btn" id="addScrapIn">Save Scrap Stock</button></div>
 </div>
@@ -221,7 +220,7 @@ main{max-width:1380px;margin:auto;padding:24px;padding-bottom:100px}.notice{back
   <button class="btn success" onclick="exportCategoryExcel('Power Supply')">📥 Download Power Supplies Excel</button>
   <button class="btn" onclick="exportCategoryExcel('')">📥 Download Complete Inventory</button>
   <label class="btn" style="cursor:pointer; display:inline-block; margin:0; line-height: normal; background:linear-gradient(135deg,#7c3aed,#6d28d9);">
-    📁 Restore Backup (JSON)
+  
     <input type="file" id="importFile" accept=".json" style="display:none;" onchange="restoreBackup(event)">
   </label>
   <button class="btn danger" id="resetBtn">🗑️ Delete All Data</button>
@@ -232,7 +231,7 @@ main{max-width:1380px;margin:auto;padding:24px;padding-bottom:100px}.notice{back
 
 <script>
 "use strict";
-const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxNwG_Fzkmt406TwMEGBjL7LZmpUGv8spj4onZHEQlcKJn74kBsIAhdOEH1LNcEmWdkEQ/exec";
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbywLE3wIEUIO5WX8u_Pk3mf1eLxH7hTUDkIRaQ19Thcf1XCBD941PqhM6uS9oq0NTmjMg/exec";
 const STORAGE_KEY = "stock_manager_hard_power_v5";
 
 let state = { products: [], records: [], nextId: 1, nextRecordId: 1 };
@@ -686,7 +685,7 @@ function restoreBackup(event) {
       alert("Error reading JSON file: " + err.message);
     }
   };
-  reader.readAsTest(file);
+  reader.readAsText(file);
 }
 
 const resetBtn = document.getElementById("resetBtn");
