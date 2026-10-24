@@ -26,11 +26,9 @@ main{max-width:1380px;margin:auto;padding:24px;padding-bottom:100px}.notice{back
 <header><h1>Stock Manager Pro</header>
 <main>
 <div class="stats">
-<div class="stat"><small>Total Products</small><strong id="statProducts">0</strong></div>
 <div class="stat"><small>Total Units in Stock</small><strong id="statStock">0</strong></div>
 <div class="stat"><small>Units Sold Today</small><strong id="statSold">0</strong></div>
 <div class="stat"><small>Stock Received Today</small><strong id="statIn">0</strong></div>
-<div class="stat"><small>Low Stock Items (<3)</small><strong id="statLowStock" style="color:#f87171">0</strong></div>
 </div>
 <nav class="tabs">
 <button class="active" data-tab="dashboard">📊 Inventory Summary</button>
@@ -127,8 +125,8 @@ main{max-width:1380px;margin:auto;padding:24px;padding-bottom:100px}.notice{back
 <div class="field"><label>Product Name / Code</label><input list="productsList" id="wProductInput" placeholder="Type part of name..."></div>
 <div class="field"><label>Action Type</label>
   <select id="wActionType">
-    <option value="In">➕ Warranty Received (+ Change)</option>
-    <option value="Issue">➖ Warranty Issued /Claimed (- Less)</option>
+    <option value="In">➕ Warranty Change </option>
+    <option value="Issue">➖ Warranty Less </option>
   </select>
 </div>
 <div class="field"><label>Quantity</label><input id="wQty" type="number" min="1" step="1" placeholder="e.g. 1"></div>
