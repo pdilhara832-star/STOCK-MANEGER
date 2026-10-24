@@ -690,37 +690,40 @@ const resetBtn = document.getElementById("resetBtn");
 if(resetBtn) resetBtn.onclick = ()=>{
   if(confirm("Delete all data?")){ localStorage.removeItem(STORAGE_KEY); state = { products: [], records: [], nextId: 1, nextRecordId: 1 }; persist(); }
 };
-  // Live Data Override Fix - 
+// Instant Local Load & Sync Fix - කෝඩ් එකේ අන්තිමට දාන්න
 window.initApp = async function() {
-  showSyncStatus("Loading data...", true);
+  showSyncStatus("Loading local data...", true);
+  
+  // 1. මුලින්ම බ්‍රව්සර් එකේ (LocalStorage) තියෙන ඩේටා ටික අරන් එවලෙම screen එක පිරවීම (මැකී යෑම වළකී)
   const saved = localStorage.getItem(STORAGE_KEY);
-  let localState = saved ? JSON.parse(saved) : null;
+  if (saved) {
+    try {
+      state = JSON.parse(saved);
+      if(!state.nextId) state.nextId = state.products.length ? Math.max(...state.products.map(p => Number(p.id) || 0)) + 1 : 1;
+      if(!state.nextRecordId) state.nextRecordId = state.records.length ? Math.max(...state.records.map(r => Number(r.id) || 0)) + 1 : 1;
+    } catch(err) {
+      console.error("Local parse error:", err);
+    }
+  }
+  
+  // 
+  render();
+  showSyncStatus("Ready", false);
 
   try {
     const res = await fetch(WEB_APP_URL);
     const cloudData = await res.json();
-    
-    if (localState && localState.products && localState.products.length > 0) {
-      state = localState;
-      if (cloudData && Array.isArray(cloudData.products) && cloudData.products.length >= localState.products.length) {
+    if (cloudData && Array.isArray(cloudData.products) && cloudData.products.length > 0) {
+      if (!state.products.length || cloudData.products.length >= state.products.length) {
         state = cloudData;
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+        render();
       }
-    } else if (cloudData && Array.isArray(cloudData.products)) {
-      state = cloudData;
     }
   } catch(e) {
-    console.error("Cloud load error:", e);
-    if (localState) state = localState;
+    console.log("Cloud background sync offline:", e);
   }
-  
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-  showSyncStatus("Ready", false);
-  render();
 };
-
-// 
-initApp();
-
 
 initApp();
 </script>
