@@ -690,6 +690,37 @@ const resetBtn = document.getElementById("resetBtn");
 if(resetBtn) resetBtn.onclick = ()=>{
   if(confirm("Delete all data?")){ localStorage.removeItem(STORAGE_KEY); state = { products: [], records: [], nextId: 1, nextRecordId: 1 }; persist(); }
 };
+  // Live Data Override Fix - 
+window.initApp = async function() {
+  showSyncStatus("Loading data...", true);
+  const saved = localStorage.getItem(STORAGE_KEY);
+  let localState = saved ? JSON.parse(saved) : null;
+
+  try {
+    const res = await fetch(WEB_APP_URL);
+    const cloudData = await res.json();
+    
+    if (localState && localState.products && localState.products.length > 0) {
+      state = localState;
+      if (cloudData && Array.isArray(cloudData.products) && cloudData.products.length >= localState.products.length) {
+        state = cloudData;
+      }
+    } else if (cloudData && Array.isArray(cloudData.products)) {
+      state = cloudData;
+    }
+  } catch(e) {
+    console.error("Cloud load error:", e);
+    if (localState) state = localState;
+  }
+  
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  showSyncStatus("Ready", false);
+  render();
+};
+
+// 
+initApp();
+
 
 initApp();
 </script>
