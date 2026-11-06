@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Stock Manager - Hard & Power Supply Suite</title>
 <style>
-:root{font-family:'Inter',system-ui,sans-serif;color:#176ab5;background:#000000 ;font-synthesis:none}
+:root{font-family:'Inter',system-ui,sans-serif;color:#0f172a;background:#060911;font-synthesis:none}
 *{box-sizing:border-box}body{margin:0;position:relative;min-height:100vh}
 #bgVideo { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; object-fit: cover; z-index: -999; opacity: 0.15; pointer-events: none; }
 header{background:linear-gradient(135deg,rgba(15,23,42,0.92),rgba(30,58,138,0.92));color:#fff;padding:26px 28px;backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,0.08);box-shadow:0 4px 20px rgba(0,0,0,0.4)}header h1{margin:0 0 6px;font-size:24px;letter-spacing:.4px;font-weight:800}header p{margin:0;color:#93c5fd;font-size:13px}
@@ -23,19 +23,22 @@ main{max-width:1380px;margin:auto;padding:24px;padding-bottom:100px}.notice{back
 <video autoplay muted loop id="bgVideo"><source src="itachi.mp4" type="video/mp4"></video>
 <datalist id="productsList"></datalist>
 
-<header><h1>Stock Manager </header>
+<header><h1>Stock Manager Pro</h1><p>Hard Drives &amp; Power Supplies Inventory Suite</p></header>
 <main>
+<div class="notice">✨ <strong>System Ready:</strong> Category-wise Excel Reports &amp; Warranty Tracking Active.</div>
 <div class="stats">
+<div class="stat"><small>Total Products</small><strong id="statProducts">0</strong></div>
 <div class="stat"><small>Total Units in Stock</small><strong id="statStock">0</strong></div>
 <div class="stat"><small>Units Sold Today</small><strong id="statSold">0</strong></div>
 <div class="stat"><small>Stock Received Today</small><strong id="statIn">0</strong></div>
+<div class="stat"><small>Low Stock Items (<3)</small><strong id="statLowStock" style="color:#f87171">0</strong></div>
 </div>
 <nav class="tabs">
 <button class="active" data-tab="dashboard">📊 Inventory Summary</button>
 <button data-tab="stockInLogTab">📥 Stock In Log</button>
 <button data-tab="salesLogTab">🛍️ Sales Log</button>
 <button data-tab="conversionLogTab">🔄 Conversion Log</button>
-<button data-tab="receive"> 🟢Stock In (Working)</button>
+<button data-tab="receive">➕ Stock In (Working)</button>
 <button data-tab="warrantyTab">🟡 Warranty Stock</button>
 <button data-tab="scrapTab">🔴 Scrap In</button>
 <button data-tab="sales">🛒 Record Sale</button>
@@ -66,9 +69,9 @@ main{max-width:1380px;margin:auto;padding:24px;padding-bottom:100px}.notice{back
   <th>Item Code</th>
   <th>Product / Model</th>
   <th>Category</th>
-  <th class="num">Working</th>
-  <th class="num">Warranty</th>
-  <th class="num">Scrap</th>
+  <th class="num">Working (Bal)</th>
+  <th class="num">Warranty (Bal)</th>
+  <th class="num">Scrap (Bal)</th>
   <th class="num">Total In</th>
   <th class="num">Total Sold</th>
   <th class="num">Net Balance</th>
@@ -125,8 +128,8 @@ main{max-width:1380px;margin:auto;padding:24px;padding-bottom:100px}.notice{back
 <div class="field"><label>Product Name / Code</label><input list="productsList" id="wProductInput" placeholder="Type part of name..."></div>
 <div class="field"><label>Action Type</label>
   <select id="wActionType">
-    <option value="In">➕ Warranty Change </option>
-    <option value="Issue">➖ Warranty Less </option>
+    <option value="In">➕ Warranty Received (+ Change)</option>
+    <option value="Issue">➖ Warranty Issued/Claimed (- Less)</option>
   </select>
 </div>
 <div class="field"><label>Quantity</label><input id="wQty" type="number" min="1" step="1" placeholder="e.g. 1"></div>
@@ -147,8 +150,8 @@ main{max-width:1380px;margin:auto;padding:24px;padding-bottom:100px}.notice{back
 <div class="field"><label>Product Name / Code</label><input list="productsList" id="sProductInput" placeholder="Type part of name..."></div>
 <div class="field"><label>Quantity Received</label><input id="sQty" type="number" min="1" step="1" placeholder="e.g. 1"></div>
 <div class="field"><label>Korean Seal Date</label><input id="sKoreanDate" type="date"></div>
-<div class="field"><label>Sri Lanka Seal Date</label><input id="sSriLankanDate" type="date"></div>
-<div class="field"><label>Supplier</label><input id="sNote" placeholder="Scrap Supplier / Ref"></div>
+<div class="field"><label>Sri Lankan Seal Date</label><input id="sSriLankanDate" type="date"></div>
+<div class="field"><label>Supplier / Source</label><input id="sNote" placeholder="Scrap Supplier / Ref"></div>
 </div>
 <div class="actions"><button class="btn" id="addScrapIn">Save Scrap Stock</button></div>
 </div>
@@ -218,7 +221,7 @@ main{max-width:1380px;margin:auto;padding:24px;padding-bottom:100px}.notice{back
   <button class="btn success" onclick="exportCategoryExcel('Power Supply')">📥 Download Power Supplies Excel</button>
   <button class="btn" onclick="exportCategoryExcel('')">📥 Download Complete Inventory</button>
   <label class="btn" style="cursor:pointer; display:inline-block; margin:0; line-height: normal; background:linear-gradient(135deg,#7c3aed,#6d28d9);">
-  
+    📁 Restore Backup (JSON)
     <input type="file" id="importFile" accept=".json" style="display:none;" onchange="restoreBackup(event)">
   </label>
   <button class="btn danger" id="resetBtn">🗑️ Delete All Data</button>
@@ -229,7 +232,7 @@ main{max-width:1380px;margin:auto;padding:24px;padding-bottom:100px}.notice{back
 
 <script>
 "use strict";
-const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbywLE3wIEUIO5WX8u_Pk3mf1eLxH7hTUDkIRaQ19Thcf1XCBD941PqhM6uS9oq0NTmjMg/exec";
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzL1wLuXl-0TxnEajDz7ih7K1oL5GXwr9XVhIn8c4JSsgQLUPNp9XPIAde3vV4rVhnN_w/exec";
 const STORAGE_KEY = "stock_manager_hard_power_v5";
 
 let state = { products: [], records: [], nextId: 1, nextRecordId: 1 };
@@ -690,17 +693,7 @@ const resetBtn = document.getElementById("resetBtn");
 if(resetBtn) resetBtn.onclick = ()=>{
   if(confirm("Delete all data?")){ localStorage.removeItem(STORAGE_KEY); state = { products: [], records: [], nextId: 1, nextRecordId: 1 }; persist(); }
 };
-[2:11 pm, 24/10/2026] +94 75 087 2366:  // 1. මුලින්ම බ්‍රව්සර් එකේ (LocalStorage) තියෙන ඩේටා ටික අරන් එවලෙම screen එක පිරවීම (මැකී යෑම වළකී)
-  const saved = localStorage.getItem(STORAGE_KEY);
-  if (saved) {
-    try {
-      state = JSON.parse(saved);
-      if(!state.nextId) state.nextId = state.products.length ? Math.max(...state.products.map(p => Number(p.id) || 0)) + 1 : 1;
-      if(!state.nextRecordId) state.nextRecordId = state.records.length ? Math.max(...state.records.map(r => Number(r.id) || 0)) + 1 : 1;
-    } catch(err) {
-      console.error("Local parse error:", err);
-    }
-    
+
 initApp();
 </script>
 </body>
