@@ -140,12 +140,12 @@ main{max-width:1380px;margin:auto;padding:24px;padding-bottom:100px}.notice{back
 <h2>🔴 Record Scrap Stock In (Both Seals)</h2>
 <div class="grid">
 <div class="field"><label>Date</label><input id="sDate" type="date"></div>
-<div class="field"><label>Staff Name</label><input id="sStaff" placeholder="Your name / Technician"></div>
+<div class="field"><label>Staff Name</label><input id="sStaff" placeholder="Technician"></div>
 <div class="field"><label>Product Name</label><input list="productsList" id="sProductInput" placeholder="Type part of name..."></div>
 <div class="field"><label>Quantity Received</label><input id="sQty" type="number" min="1" step="1" placeholder="e.g. 1"></div>
 <div class="field"><label>Korean Seal Date</label><input id="sKoreanDate" type="date"></div>
 <div class="field"><label>Sri Lankan Seal Date</label><input id="sSriLankanDate" type="date"></div>
-<div class="field"><label>Supplier</label><input id="sNote" placeholder="Scrap Supplier / Ref"></div>
+<div class="field"><label>Supplier</label><input id="sNote" placeholder="Scrap Supplier"></div>
 </div>
 <div class="actions"><button class="btn" id="addScrapIn">Save Scrap Stock</button></div>
 </div>
@@ -156,12 +156,12 @@ main{max-width:1380px;margin:auto;padding:24px;padding-bottom:100px}.notice{back
 <h2>Record Sales / Issue</h2>
 <div class="grid">
 <div class="field"><label>Sales Date</label><input id="saleDate" type="date"></div>
-<div class="field"><label>Staff Name</label><input id="saleStaff" placeholder="Your name / Technician"></div>
+<div class="field"><label>Staff Name</label><input id="saleStaff" placeholder="Technician"></div>
 <div class="field"><label>Product Name</label><input list="productsList" id="saleProductInput" placeholder="Type part of name..."></div>
 <div class="field"><label>Stock Category to Deduct From</label><select id="saleCategory"><option value="Working">Working Stock</option><option value="Warranty">Warranty Stock</option><option value="Scrap">Scrap Stock</option></select></div>
 <div class="field"><label>Quantity Sold</label><input id="saleQty" type="number" min="1" step="1" placeholder="e.g. 2"></div>
 <div class="field"><label>Customer / Buyer Name</label><input id="saleCustomer" placeholder="Customer / Buyer name"></div>
-<div class="field"><label>Notes (Optional)</label><input id="saleNote" placeholder="Invoice / Ref"></div>
+<div class="field"><label>Notes (Optional)</label><input id="saleNote" placeholder="Invoice Number"></div>
 </div>
 <div class="actions"><button class="btn" id="addSale">Save Sale</button></div>
 </div>
@@ -173,7 +173,7 @@ main{max-width:1380px;margin:auto;padding:24px;padding-bottom:100px}.notice{back
 <p style="color:#94a3b8;font-size:13px;margin-bottom:18px;">Use this when a box label stated one item (e.g. Black PSU), but upon opening, it actually contains another item (e.g. White PSU).</p>
 <div class="grid">
 <div class="field"><label>Date</label><input id="convDate" type="date"></div>
-<div class="field"><label>Staff Name</label><input id="convStaff" placeholder="Your name / Technician"></div>
+<div class="field"><label>Staff Name</label><input id="convStaff" placeholder="Technician"></div>
 <div class="field"><label>From Item (Wrongly Logged / Box Label)</label><input list="productsList" id="convFromInput" placeholder="Type item from box label..."></div>
 <div class="field"><label>To Item (Actual Item Inside Box)</label><input list="productsList" id="convToInput" placeholder="Type actual item inside..."></div>
 <div class="field"><label>Stock Condition</label><select id="convCategory"><option value="Working">Working Stock</option><option value="Warranty">Warranty Stock</option><option value="Scrap">Scrap Stock</option></select></div>
